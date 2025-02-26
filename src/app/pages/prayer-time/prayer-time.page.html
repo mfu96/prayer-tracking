@@ -1,0 +1,120 @@
+
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Namaz Vakitleri</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="toggleSearchbar()">
+        <ion-icon slot="icon-only" name="search"></ion-icon>
+      </ion-button>
+      <ion-button (click)="presentFilter()">
+        <ion-icon slot="icon-only" name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+
+  <!-- Arama çubuğu -->
+  <ion-toolbar *ngIf="showSearchbar">
+    <ion-searchbar
+      showCancelButton="always"
+      [(ngModel)]="queryText"
+      (ionInput)="updateSchedule()"
+      (ionCancel)="toggleSearchbar()"
+      placeholder="Ara"
+    ></ion-searchbar>
+  </ion-toolbar>
+
+  <!-- Segment butonları -->
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment" (ionChange)="updateSchedule()">
+      <ion-segment-button value="today">
+        Bugün
+      </ion-segment-button>
+      <ion-segment-button value="all">
+        Tüm
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+
+
+<ion-content fullscreen="true">
+
+  <ion-list #prayerList>
+    <ion-item-group *ngFor="let group of prayerGroups">
+      <ion-item-divider sticky>
+        <ion-label>
+          {{ group.date }}
+        </ion-label>
+      </ion-item-divider>
+
+      <ion-item-sliding
+        *ngFor="let prayer of group.prayers"
+        [attr.prayer-name]="prayer.prayerName | lowercase"
+      >
+        <ion-item
+          [routerLink]="['/prayer-detail', prayer.prayerId]"
+          detail="true"
+        >
+          <ion-grid>
+            <!-- Namaz Adı -->
+            <ion-row>
+              <ion-col class="ion-text-center">
+                <h3><b>{{ prayer.prayerName }}</b></h3>
+              </ion-col>
+            </ion-row>
+
+            <!-- Saat & Mesafe ve İsim Bilgisi -->
+            <ion-row>
+              <ion-col size="6">
+                <p>
+                  {{ formatTime(prayer.qrScanDate) }} &mdash;
+                  {{ prayer.distanceBetween | number: '1.1-2' }} km
+                </p>
+              </ion-col>
+              <ion-col size="6" class="ion-text-right">
+                <p>
+                  {{ prayer.firstName }} {{ prayer.lastName }}
+                </p>
+              </ion-col>
+            </ion-row>
+
+            <!-- Cami ve Şirket Bilgisi -->
+            <ion-row>
+              <ion-col size="6">
+                <p>
+                  {{ prayer.mosqueName }}
+                </p>
+              </ion-col>
+              <ion-col size="6" class="ion-text-right">
+                <p>
+                  {{ prayer.companyName }}
+                </p>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-item>
+
+        <!-- Favori ekleme/kaldırma butonları (eğer tanımlıysa) -->
+        <!-- <ion-item-options side="end">
+          <ion-item-option color="favorite" (click)="addFavorite(prayer)">
+            <ion-icon slot="icon-only" name="star"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="removeFavorite(prayer)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options> -->
+      </ion-item-sliding>
+    </ion-item-group>
+  </ion-list>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button [routerLink]="['/qr']">
+      <ion-icon name="qr-code-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+  
+</ion-content>

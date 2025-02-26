@@ -1,0 +1,13 @@
+<!-- <ion-content [fullscreen]="true">
+  <div class="loading-container" *ngIf="scanning" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+    <ion-spinner name="circular"></ion-spinner>
+    <p style="margin-top: 10px;">Tarama Başlıyor...</p>
+  </div>
+
+
+</ion-content> -->
+  <zxing-scanner
+    [device]="currentDevice"
+    (camerasFound)="onCamerasFound($event)"
+    (scanSuccess)="onCodeResult($event)">
+  </zxing-scanner>

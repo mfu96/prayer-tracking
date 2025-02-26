@@ -1,0 +1,56 @@
+ion-fab-button {
+    --background: var(--ion-color-step-150, #ffffff);
+    --background-hover: var(--ion-color-step-200, #f2f2f2);
+    --background-focused: var(--ion-color-step-250, #d9d9d9);
+    --color: var(--ion-color-primary, #3880ff);
+  }
+  
+  /* Material Design activated için ripple kullanır, bu yüzden sadece iOS activated background stilini ayarlıyoruz */
+  .ios ion-fab-button {
+    --background-activated: var(--ion-color-step-250, #d9d9d9);
+  }
+  
+  /* Namaz isimlerine göre renk tanımlamaları */
+  $prayerColors: (
+    "sabah": #69bb7b,
+    "öğle": #fed035,
+    "ikindi": #fd8b2d,
+    "akşam": #fe4c52,
+    "yatsı": #ac282b
+  );
+  
+  @each $prayer, $color in $prayerColors {
+    ion-item-sliding[prayer-name="#{$prayer}"] ion-item {
+      border-left: 4px solid $color;
+    }
+  }
+  
+  ion-grid {
+    padding: 0;
+  }
+  
+  h3 {
+    margin: 0;
+    font-weight: bold;
+  }
+  
+  p {
+    margin: 0;
+  }
+  
+  ion-row {
+    align-items: center;
+  }
+  
+  ion-col {
+    display: flex;
+  }
+  
+  .ion-text-right {
+    justify-content: flex-end;
+  }
+  
+  .ion-text-center {
+    justify-content: center;
+  }
+  

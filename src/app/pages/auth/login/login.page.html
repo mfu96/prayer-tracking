@@ -1,0 +1,54 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+
+    <ion-title>Giriş Yap</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div class="login-logo">
+    <img src="assets/icon/dib.svg" alt="Ionic logo">
+  </div>
+
+  <div class="login-form">
+    <form #loginForm="ngForm" (ngSubmit)="onLogin(loginForm)" novalidate>
+      <ion-input
+        label="Kullanıcı Adı"
+        labelPlacement="stacked"
+        fill="solid"
+        [(ngModel)]="login.email"
+        name="username"
+        type="text"
+        #username="ngModel"
+        spellcheck="false"
+        autocapitalize="off"
+        errorText="Kullanıcı adı gerekli"
+        required>
+      </ion-input>
+
+      <ion-input
+        label="Şifre"
+        labelPlacement="stacked"
+        fill="solid"
+        [(ngModel)]="login.password"
+        name="password"
+        type="password"
+        #password="ngModel"
+        errorText="Şifre gerekli"
+        required>
+      </ion-input>
+
+      <ion-row>
+        <ion-col>
+          <ion-button type="submit" expand="block">Giriş Yap</ion-button>
+        </ion-col>
+        <ion-col>
+          <ion-button (click)="onSignup()" color="light" expand="block">Kayıt Ol</ion-button>
+        </ion-col>
+      </ion-row>
+    </form>
+  </div>
+</ion-content>
