@@ -45,5 +45,11 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<true/>
+
+		<key>NSCameraUsageDescription</key>
+		<string>Barkod taraması için kamera izni gerekli.</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>Uygulamayı kullanırken konumunuza erişmek istiyoruz.</string>
+
 </dict>
 </plist>

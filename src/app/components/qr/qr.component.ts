@@ -2,105 +2,117 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
 import { LocationService } from 'src/app/services/location.service';
+import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
+
+
 
 @Component({
   selector: 'app-qr',
   templateUrl: './qr.component.html',
   imports: [
     CommonModule,
-    IonicModule, // IonicModule'ü buraya ekliyoruz
-    ZXingScannerModule
+    IonicModule // IonicModule'ü buraya ekliyoruz
+    
   ],
   styleUrls: ['./qr.component.scss'],
 })
+
+
 export class QrComponent implements OnInit, OnDestroy {
-  scanning = false;
+
+
+  scanning = false; // Spinner'ın görünürlüğünü kontrol eden bayrak
   availableDevices: MediaDeviceInfo[] = [];
   currentDevice: MediaDeviceInfo | undefined;
-
+  
   constructor(
     private router: Router,
     private locationService: LocationService,
     private platform: Platform
-  ) { }
+  ) {}
 
   ngOnInit() {
-    // Konum izlemeyi başlat
+        // Konum izlemeyi başlat
     this.locationService.startTracking();
-  
-    // Platform hazır olduğunda izin iste
-    this.platform.ready().then(() => {
-      this.requestCameraPermission();
-    });
-  }
-  
-  async requestCameraPermission() {
-    const status = await navigator.mediaDevices.getUserMedia({ video: true })
-      .then(() => {
-        console.log('Kamera izni verildi.');
-      })
-      .catch((error) => {
-        console.error('Kamera izni reddedildi.', error);
-        // Uygulamadan çıkabilir veya alternatif bir işlem yapabilirsiniz
-      });
-  }
+
+        // Platform hazır olduğunda izin iste
+
+        this.platform.ready().then(() => {
+          this.checkPermissionsAndScan(); // Platform hazır olduğunda izin kontrolü ve tarama başlatılır
+        });
+      }
+
   ngOnDestroy() {
-    // Konum izlemeyi durdur
     this.locationService.stopTracking();
   }
-// Kamera cihazlarını alır ve arka kamerayı seçer
-  onCamerasFound(devices: MediaDeviceInfo[]): void {
-    this.availableDevices = devices;
 
-    for (const device of devices) {
-      if (/back|rear|environment/gi.test(device.label)) {
-        this.currentDevice = device;
-        break;
-      }
-    }
+  async checkPermissionsAndScan() {
+    await this.checkPermissions(); // İzinler taramadan önce kontrol edilir
+    this.scan(); // Tarama başlatılır
+  }
 
-    // Eğer arka kamera bulunmazsa ilk cihazı seç
-    if (!this.currentDevice && devices.length > 0) {
-      this.currentDevice = devices[0];
+  async requestCameraPermission() {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    if (camera !== 'granted') {
+      console.error('Kamera izni reddedildi.');
+      // Gerekirse kullanıcıya bir uyarı gösterin
     }
   }
 
-  // Tarama başarılı olduğunda çalışır
-  onCodeResult(resultString: string) {
-    console.log('Taranan barkod içeriği:', resultString);
-    this.processScannedData(resultString);
+  async checkPermissions() {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    if (camera !== 'granted') {
+      console.error('Kamera izni verilmedi.');
+      // Gerekirse kullanıcıya bir uyarı gösterebilirsiniz
+    }
+  }
+async scan() {
+    this.scanning = true; // Tarama başladığında spinner gösterilir
+    try {
+      // Google Barcode Scanner Modülünün yüklü olup olmadığını kontrol et
+      const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+      if (!available) {
+        console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
+        await BarcodeScanner.installGoogleBarcodeScannerModule();
+        console.log('Modül yüklendi.');
+      }
+
+      // Tarama işlemini başlat
+      document.body.classList.add('barcode-scanner-active');
+      const { barcodes } = await BarcodeScanner.scan({
+        formats: [BarcodeFormat.QrCode],
+      });
+      if (barcodes.length > 0) {
+        const scannedData = barcodes[0].rawValue;
+        console.log('Taranan barkod içeriği:', scannedData);
+        this.processScannedData(scannedData);
+      }
+    } catch (error) {
+      console.error('Tarama hatası:', error);
+    } finally {
+      document.body.classList.remove('barcode-scanner-active');
+      this.scanning = false; // Tarama bittiğinde spinner gizlenir
+    }
   }
 
   processScannedData(scannedData: string) {
-    // Taranan veriyi parçalara ayır
     const dataParts = scannedData.split(',');
-
     if (dataParts.length < 4) {
       console.log('Geçersiz QR kodu');
       return;
     }
-
-    // Değişkenleri ata
     const qrId = parseInt(dataParts[0], 10);
     const mosqueId = parseInt(dataParts[1], 10);
     const companyId = parseInt(dataParts[2], 10);
-    const generatedDate = dataParts[3]; // Format: dd-MM-yyyy
-
-    // Çıkarılan değerleri logla
+    const generatedDate = dataParts[3];
     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
-
-    // Gönderilecek veriyi hazırla
     const prayerData = {
-      prayerName: '', // Bunu sonraki adımda ayarlayacağız
+      prayerName: '',
       mosqueId: mosqueId,
       companyId: companyId,
-      deviceId: 3
+      deviceId: 3,
     };
-
-    // prayer-add bileşenine yönlendir
     this.router.navigate(['/prayer-add'], { state: { prayerData } });
   }
-
 }

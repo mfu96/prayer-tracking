@@ -1,4 +1,4 @@
-<!-- <ion-content [fullscreen]="true">
+ <!-- <ion-content [fullscreen]="true">
   <div class="loading-container" *ngIf="scanning" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
     <ion-spinner name="circular"></ion-spinner>
     <p style="margin-top: 10px;">Tarama Başlıyor...</p>
@@ -6,8 +6,34 @@
 
 
 </ion-content> -->
-  <zxing-scanner
+
+
+  <!-- <zxing-scanner
     [device]="currentDevice"
     (camerasFound)="onCamerasFound($event)"
     (scanSuccess)="onCodeResult($event)">
-  </zxing-scanner>
+  </zxing-scanner> -->
+
+  <!-- <ion-header>
+    <ion-toolbar>
+      <ion-title>QR Kod Tarama</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  
+  <ion-content>
+    <div class="ion-padding" text-center>
+      <p>Tarama başlatılıyor... Lütfen bekleyin.</p>
+    </div>
+  </ion-content> -->
+  
+
+  <!-- <ion-content>
+    <ion-button (click)="scan()">Barkod Tara</ion-button>
+  </ion-content> -->
+
+  <ion-content [fullscreen]="true">
+    <div class="loading-container" *ngIf="scanning" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+      <ion-spinner name="circular"></ion-spinner>
+      <p style="margin-top: 10px;">Tarama Başlıyor...</p>
+    </div>
+  </ion-content>

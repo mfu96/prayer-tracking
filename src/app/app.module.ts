@@ -14,7 +14,7 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { QrComponent } from './components/qr/qr.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
-import { ZXingScannerModule } from '@zxing/ngx-scanner';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -31,8 +31,8 @@ import { ZXingScannerModule } from '@zxing/ngx-scanner';
       ServiceWorkerModule.register('ngsw-worker.js', {
         enabled: environment.production
       }),
-      QrComponent,
-      ZXingScannerModule
+      QrComponent
+
 
 
 ],
