@@ -8,6 +8,9 @@ import { Mosque } from '../../interfaces/entities/mosque';
 import { MosqueService } from '../../services/mosque.service';
 import { PrayerTimeDetailDto } from '../../interfaces/entities/prayerTimeDetailDto';
 import { PrayerTimeService } from 'src/app/services/prayer-time.service';
+import { LocationService } from 'src/app/services/location.service';
+import { ToastService } from 'src/app/services/toast.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-prayer-time',
@@ -51,11 +54,17 @@ export class PrayerTimePage implements OnInit {
     private prayerService:PrayerTimeService,
     private platform: Platform,
     private toastController: ToastController,
+
+    private locationService: LocationService, // Konum servisi
+    private toastService: ToastService, // Toast servisi
+    private loadingService: LoadingService // Loading servisi
   ) { }
 
   ngOnInit() {
     this.getPrayerUserDetail();
     this.ios = this.platform.is('ios');
+
+  this.loadingService.hideLoading;
     
   }
 
@@ -70,7 +79,7 @@ ionViewWillEnter() {
 getPrayerUserDetail(){
   this.prayerService.getPrayerByUserDetail().subscribe((response) => {
     this.prayerDetails=response.data
-    this.showToast(response.message+ "Vakitler Listelendi")
+    this.toastService.showToast(response.message+ "Vakitler Listelendi")
     console.log(response)
     this.updatePrayerGroups();
   });
@@ -82,7 +91,7 @@ getPrayerUserDetail(){
   getPrayerDetails() {
     this.prayerService.getPrayerDetails().subscribe((response) => {
       this.prayerDetails = response.data;
-      this.showToast(response.message+ "Vakitler Listelendi")
+      this.toastService.showToast(response.message+ "Vakitler Listelendi")
       console.log(response)
       this.updatePrayerGroups();
     });
@@ -193,12 +202,22 @@ getPrayerUserDetail(){
   // Diğer fonksiyonlar (addFavorite, removeFavorite, openSocial, vb.) burada olabilir
 
 
-  async showToast(message: string) {
-    const toast = document.createElement('ion-toast');
-    toast.message = message;
-    toast.duration = 2000;
-    toast.position = 'middle'; // 'top', 'middle' veya 'bottom'
-    document.body.appendChild(toast);
-    await toast.present();
+  // async showToast(message: string) {
+  //   const toast = document.createElement('ion-toast');
+  //   toast.message = message;
+  //   toast.duration = 2000;
+  //   toast.position = 'middle'; // 'top', 'middle' veya 'bottom'
+  //   document.body.appendChild(toast);
+  //   await toast.present();
+  // }
+
+  // QR tarama butonuna basıldığında çalışır
+  async goToQrScanner() {
+    const isLocationEnabled = await this.locationService.isLocationServiceEnabled(); // Konum servisini kontrol eder
+    if (isLocationEnabled) {
+      this.router.navigate(['/qr']); // Konum açıksa QR sayfasına gider
+    } else {
+      this.toastService.showToast('Konum servisi kapalı. Lütfen açın.'); // Kapalıysa uyarı gösterir
+    }
   }
 }

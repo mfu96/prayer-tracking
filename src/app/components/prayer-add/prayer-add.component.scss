@@ -1,0 +1,4 @@
+.button-disabled {
+  opacity: 0.5; // Pasif butonun şeffaflığını azaltır
+  pointer-events: none; // Pasif butona tıklanmasını engeller
+}

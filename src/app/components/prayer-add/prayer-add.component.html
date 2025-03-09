@@ -1,18 +1,16 @@
+<!-- Başlık çubuğu -->
 <ion-header>
   <ion-toolbar>
-    <ion-title>Namaz Vakti Ekle</ion-title>
+    <ion-title>Namaz Vakti Ekle</ion-title> <!-- Sayfa başlığı -->
   </ion-toolbar>
 </ion-header>
 
+<!-- İçerik alanı -->
 <ion-content>
-  <!-- Konum durumu mesajı -->
+  <!-- Konum durumu mesajı varsa gösterir -->
   <div *ngIf="locationStatus">
-    <p>{{ locationStatus }}</p>
+    <p>{{ locationStatus }}</p> <!-- Konum durumunu yazdırır -->
+    <!-- Doğruluk yeterli değilse ek mesaj -->
     <p *ngIf="!canSubmit">Konum doğruluğu 50 metrenin altına düşene kadar lütfen bekleyin.</p>
   </div>
-
-  <!-- Gönderim butonu -->
-  <ion-button [disabled]="!canSubmit" (click)="addPrayerTime()">
-    Namaz Vaktini Gönder
-  </ion-button>
 </ion-content>
