@@ -134,6 +134,11 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
     document.body.appendChild(alert); // Alert'u DOM'a ekler
     await alert.present(); // Alert'u gösterir
 
+    // Alert kapandığında loading'i gizle
+  alert.onDidDismiss().then(() => {
+    this.loadingService.hideLoading();
+  });
+
 
     // 3 dakika sonra zaman aşımı
     setTimeout(() => {
@@ -176,14 +181,18 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
       (response) => { // Başarılıysa
         console.log('Vakit eklendi:', response); // Konsola yazar
         this.toastService.showToast(response.message); // Kullanıcıya mesaj gösterir
-        this.router.navigate(['/tabs/prayer-time']); // Namaz vakti sayfasına yönlendirir
-        this.locationService.stopTracking(); // Konum izlemeyi durdurur
-                this.loadingService.hideLoading(); // Loading ekranını kapatır
+        this.loadingService.hideLoading(); // Loading'i gizle
+      this.locationService.stopTracking(); // Konum izlemeyi durdur
+      if (this.locationSubscription) {
+        this.locationSubscription.unsubscribe(); // Aboneliği iptal et
+      }
+      this.router.navigate(['/tabs/prayer-time']); // Yönlendirme yap
+    },
 
-      },
       (error) => { // Hata varsa
         console.error('Namaz vakti eklenirken hata oluştu:', error.message); // Konsola yazar
         this.toastService.showToast('Namaz vakti eklenirken bir hata oluştu.'); // Kullanıcıya uyarı
+        this.loadingService.hideLoading(); // Hata durumunda da gizle
       }
     );
   }

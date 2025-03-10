@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { PrayerAddComponent } from './components/prayer-add/prayer-add.component';
 import { QrComponent } from './components/qr/qr.component';
+import { LoginGuard } from './guards/login.guard';
 
 const routes: Routes = [
   {
@@ -17,9 +18,9 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mosque/mosque.module').then( m => m.MosquePageModule)
   },
   {
-    path: 'qr',
+    path: '/tabs/qr',
     component: QrComponent,
-    // canActivate:[LoginGuard]
+     //canActivate:[LoginGuard]
   },
   {
     path: 'prayer-add',
