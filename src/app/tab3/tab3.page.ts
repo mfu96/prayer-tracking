@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DeviceInformationService } from '../services/device-information.service';
 
 @Component({
   selector: 'app-tab3',
@@ -8,6 +9,11 @@ import { Component } from '@angular/core';
 })
 export class Tab3Page {
 
-  constructor() {}
+  constructor(private deviceInfoService: DeviceInformationService) {}
+
+  async ngOnInit() {
+    // Sayfa yüklendiğinde cihaz bilgilerini al ve konsola yazdır
+    await this.deviceInfoService.logDeviceInfo();
+  }
 
 }

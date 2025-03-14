@@ -18,7 +18,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/mosque/mosque.module').then( m => m.MosquePageModule)
   },
   {
-    path: '/tabs/qr',
+    path: 'qr',
     component: QrComponent,
      //canActivate:[LoginGuard]
   },
