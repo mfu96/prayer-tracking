@@ -19,7 +19,7 @@
     "experimentalDecorators": true,
     "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES5",  //burası ES2022 idi
+    "target": "ES5",
     "module": "es2020",
     "lib": [
       "es2018", 
