@@ -29,7 +29,15 @@ const routes: Routes = [
   {
     path: 'login',
     loadChildren: () => import('./pages/auth/login/login.module').then( m => m.LoginPageModule)
-  }
+  },
+  {
+    path: 'account',
+    loadChildren: () => import('./pages/auth/account/account.module').then( m => m.AccountPageModule)
+  },
+
+
+
+
 
  
 

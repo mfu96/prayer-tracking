@@ -6,6 +6,7 @@ import { Storage } from '@ionic/storage-angular';
 import { LoginModel } from 'src/app/interfaces/entities/loginModel';
 
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +21,8 @@ export class LoginPage  {
   constructor(
     private authService: AuthService,
     private storage: Storage,
-    private router:Router
+    private router:Router,
+    private toast:ToastService
 
   ) {
     this.initStorage();
@@ -31,20 +33,28 @@ export class LoginPage  {
   }
 
   onLogin(form: NgForm) {
-
     if (form.valid) {
       this.authService.login(this.login).subscribe(
-        (response) => {
+        async (response) => {  // async callback kullanalım ki await edebilelim
           if (response.success) {
-            // Token ve expiration bilgilerini sakla
-            this.storage.set('token', response.data.token);
-            this.storage.set('expiration', response.data.expiration);
-            this.storage.set('loggedIn', true)
-            this.authService.setUser(this.login.email)
-            this.router.navigate(['/'])
-            window.dispatchEvent(new Event('user:login'));
+            await this.storage.set('token', response.data.token);
+            await this.storage.set('expiration', response.data.expiration);
+            await this.storage.set('loggedIn', true);
+            
+            await this.authService.setUser(this.login.email);
+  
+            // Yönlendirmeyi storage işlemleri bittikten sonra yapalım
+            this.router.navigate(['/account']).then(() => {
+              // Yönlendirme sonrası event gönderilebilir; fakat AccountPage’in ionViewWillEnter’i tetiklenmiş oluyor.
+              window.dispatchEvent(new Event('user:login'));
 
-            // Giriş başarılı olduğunda yapılacak işlemler
+              this.toast.showToast('Giriş başarılı! Anasayfaya yönlendiriliyorsunuz...');
+              // Wait 3 seconds, then navigate to '/'
+              setTimeout(() => {
+                this.router.navigate(['/']);
+              }, 3000); // 3000 milliseconds = 3 seconds
+            });
+            
             console.log('Giriş başarılı!');
           } else {
             console.log('Giriş başarısız:', response.message);

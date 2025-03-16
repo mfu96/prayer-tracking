@@ -68,13 +68,13 @@ export class AuthService {
 setUser(email: string) {
   //console.log('setUser çağırıldı, email:', email);
   this.userService.getByEmail(email).subscribe(
-    (response) => {
+   async (response) => {
       if (response && response.data) {
         this.user = response.data;
        //console.info(this.user);
-        this.storage.set("fullName", `${this.user.firstName} ${this.user.lastName}`);
-        this.storage.set("email", this.user.email);
-        this.storage.set("userId", this.user.userId); // Kullanıcı ID'sini saklıyoruz
+      await  this.storage.set("fullName", `${this.user.firstName} ${this.user.lastName}`);
+       await this.storage.set("email", this.user.email);
+       await this.storage.set("userId", this.user.userId); // Kullanıcı ID'sini saklıyoruz
       } else {
         console.error('Kullanıcı verisi alınamadı.');
         
@@ -132,9 +132,15 @@ setUser(email: string) {
   
 
 
-  async getUserName(): Promise<string> {
+  async getUserName_eski(): Promise<string> {
     const fullName = await this.storage.get('fullName');
     return fullName || '';
+  }
+
+  getUsername(): Promise<string> {
+    return this.storage.get('fullName').then(value => {
+      return value;
+    });
   }
   
 }

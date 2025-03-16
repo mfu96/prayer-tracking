@@ -1,35 +1,60 @@
-// device-information.service.ts
 
+// device-information.service.ts
 import { Injectable } from '@angular/core';
-import { Device } from '@capacitor/device';
+import { Device as CapacitorDevice } from '@capacitor/device';
+import { DeviceService } from './device.service';
+import { Device } from '../interfaces/entities/device';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class DeviceInformationService {
-  constructor() {}
+  constructor(private deviceService: DeviceService) {}
 
   /**
-   * Cihazın benzersiz kimliği (uuid) ve model bilgisini alır,
-   * ardından konsola yazdırır.
+   * Cihaz bilgilerini alır, eşleştirir ve backend’e gönderir.
    */
-  async logDeviceInfo(): Promise<void> {
+  async gatherAndSendDeviceInfo(): Promise<void> {
     try {
-      // Cihazın benzersiz kimliğini alıyoruz
-      const { identifier } = await Device.getId();
+      // 1. Cihazın benzersiz kimliğini alıyoruz.
+      const { identifier } = await CapacitorDevice.getId();
       
-      // Cihazın diğer bilgilerini alıyoruz
-      const info = await Device.getInfo();
+      // 2. Cihaz bilgilerini alıyoruz.
+      const info = await CapacitorDevice.getInfo();
 
-      // Konsola yazdırma
-      console.log('Cihaz Benzersiz Kimliği:', identifier);
-      console.log('Cihaz Modeli:', info.model);
-      // İsterseniz diğer bilgiler de:
-       console.log('İşletim Sistemi:', info.operatingSystem);
-       console.log('OS Versiyonu:', info.osVersion);
-       console.log('Üretici:', info.manufacturer);
-     console.log('Sanal mı?:', info.isVirtual);
-      
+      // 3. Backend’e uygun Device objesini oluşturuyoruz.
+      const device: Device = {
+        deviceId: 0, // Backend oluşturacak ya da sabit bir değer atayabilirsiniz.
+        employeeId: 0, // İhtiyacınıza göre doldurun.
+        deviceUniqId: identifier,
+        deviceName: info.model,
+        platform: info.operatingSystem,
+        osVersion: info.osVersion,
+        manufacturer: info.manufacturer,
+        
+        lastContactDate: new Date(),        // Örnek olarak mevcut tarih
+        registarationDate: new Date(),        // Örnek olarak kayıt tarihini de şimdiden atıyoruz
+        status: true                         // Varsayılan olarak aktif
+      };
+
+      // Bilgileri konsola yazdırma (debug amaçlı)
+      console.log('Gönderilecek Cihaz Bilgileri:', device);
+
+      // 4. DeviceService üzerinden backend’e POST çağrısı yapıyoruz.
+      this.deviceService.addDevice(device).subscribe(
+        response => {
+          if (response.success) {
+            console.log('Cihaz başarıyla eklendi:', response.data);
+          } else {
+            console.error('Cihaz ekleme hatası:', response.message);
+          }
+        },
+        error => {
+          console.error('HTTP Hatası:', error);
+        }
+      );
+
     } catch (error) {
       console.error('Cihaz bilgileri alınırken hata:', error);
     }
