@@ -35,6 +35,11 @@ const routes: Routes = [
         loadChildren: () => import('../pages/auth/account/account.module').then( m => m.AccountPageModule)
       },
       {
+        path: 'devices',
+        loadChildren: () => import('../pages/devices/devices.module').then( m => m.DevicesPageModule)
+      },
+
+      {
         path: '',
         redirectTo: '/tabs/prayer-time',
         pathMatch: 'full'

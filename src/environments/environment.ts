@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  apiUrl:'http://192.168.20.103:5000/api/',
-  baseUrl:'http://192.168.20.103:5000'
+  apiUrl:'http://10.20.200.189:5000/api/',
+  baseUrl:'http://10.20.200.189:5000'
 
 };
 

@@ -1,0 +1,27 @@
+/* "Bu Cihaz" yazısı için farklı renk ve stil belirleniyor */
+.highlight {
+    color: #ff4081;
+    font-weight: bold;
+  }
+  
+  /* Varsayılan grid ve item stillerinde ufak ayarlamalar */
+  ion-grid {
+    padding: 0;
+  }
+  h3 {
+    margin: 0;
+    font-weight: bold;
+  }
+  p {
+    margin: 0;
+  }
+  ion-row {
+    align-items: center;
+  }
+  ion-col {
+    display: flex;
+  }
+  .ion-text-right {
+    justify-content: flex-end;
+  }
+  

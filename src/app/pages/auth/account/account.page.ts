@@ -58,4 +58,8 @@ export class AccountPage{
     });
   }
 
+  devices(){
+    return this.router.navigate(['/tabs/devices']);
+  }
+
 }
