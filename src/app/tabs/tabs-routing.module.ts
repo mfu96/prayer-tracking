@@ -34,10 +34,7 @@ const routes: Routes = [
         path: 'account',
         loadChildren: () => import('../pages/auth/account/account.module').then( m => m.AccountPageModule)
       },
-      {
-        path: 'devices',
-        loadChildren: () => import('../pages/devices/devices.module').then( m => m.DevicesPageModule)
-      },
+  
 
       {
         path: '',
