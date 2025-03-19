@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertController } from '@ionic/angular';
+import { DeviceInformationService } from 'src/app/services/device-information.service';
 import { DeviceService } from 'src/app/services/device.service';
 import { ToastService } from 'src/app/services/toast.service';
 
@@ -11,111 +12,131 @@ import { ToastService } from 'src/app/services/toast.service';
 })
 export class DevicesPage implements OnInit {
   devices: any[] = [];
-  deviceGroups: { date: string; devices: any[] }[] = [];
-  // DB ile eşleşecek cihazın uniq id değeri (örnek olarak burada bir değer belirttik)
-  currentDeviceUniqueId: string = 'ABC123';
-
-  showSearchbar: boolean = false;
-  queryText: string = '';
+  deviceGroups: any[] = [];
+  currentDeviceUniqId: string = '';
 
   constructor(
     private deviceService: DeviceService,
+    private deviceInfoService: DeviceInformationService,
     private toastService: ToastService,
-    private alertController: AlertController
+    private alertCtrl: AlertController
   ) {}
 
   ngOnInit() {
-    this.getEmployeeDevices();
+    this.getDevices();
+    this.loadCurrentDeviceId();
   }
 
-  getEmployeeDevices() {
-    this.deviceService.getEmployeeDevices().subscribe(
-      (response) => {
-        // Servisten dönen datayı alıyoruz
-        this.devices = response.data;
-        this.toastService.showToast(response.message + " - Cihazlar Listelendi");
-        // Gelen cihaz listesini tarihe göre gruplandırıyoruz
-        this.groupDevicesByDate();
-      },
-      (error) => {
-        console.error(error);
+  
+
+  async loadCurrentDeviceId() {
+    try {
+      const device = await this.deviceInfoService.gatherRealDeviceInfo();
+      this.currentDeviceUniqId = device.deviceUniqId;
+      console.log('Mevcut cihaz id:', this.currentDeviceUniqId);
+    } catch (error) {
+      console.error('Cihaz id yüklenemedi:', error);
+    }
+  }
+
+  // Servisten cihazları çekerek önce sıralıyor, ardından gruplayarak deviceGroups içerisine atıyoruz.
+  getDevices() {
+    this.deviceService.getEmployeeDevices().subscribe((response) => {
+      this.devices = response.data.sort((a, b) =>
+        new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime()
+      );
+      this.updateDeviceGroups();
+
+      const message = response.message ? response.message + ' Listelendi' : 'Cihazlar Listelendi';
+      this.toastService.showToast(message);
+      console.log(response);
+    });
+  }
+
+  // Kayıt tarihine göre gruplayacak metod (format dd.MM.yyyy)
+  updateDeviceGroups() {
+    // Gruplama
+    const grouped = this.devices.reduce((groups: any, device) => {
+      const date = this.formatDate(new Date(device.registrationDate));
+      if (!groups[date]) {
+        groups[date] = [];
       }
-    );
-  }
+      groups[date].push(device);
+      return groups;
+    }, {});
 
-  groupDevicesByDate() {
-    // Cihazları tarih bazında (en yeni tarih en üstte olacak şekilde) sıralıyoruz.
-    // Burada 'date' alanının formatının (örneğin: "16.03.2025") doğru olduğundan emin olun.
-    this.devices.sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime();
-    });
-
-    const groups:any = {};
-
-    this.devices.forEach((device) => {
-      // Cihazın tarih bilgisini anahtar olarak kullanıyoruz.
-      const dateKey = device.date;
-      if (!groups[dateKey]) {
-        groups[dateKey] = [];
-      }
-      groups[dateKey].push(device);
-    });
-
-    // Grupları, kullanılabilir bir yapı haline getiriyoruz.
-    this.deviceGroups = Object.keys(groups).map((date) => {
-      return {
-        date: date,
-        devices: groups[date],
-      };
-    });
-  }
-
-  confirmDelete(device: any) {
-    // Cihaz silme onayı için alert kullanıyoruz.
-    this.alertController
-      .create({
-        header: 'Cihazı Sil',
-        message: 'Cihazı silmek istediğinize emin misiniz?',
-        buttons: [
-          {
-            text: 'İptal',
-            role: 'cancel',
-          },
-          {
-            text: 'Sil',
-            handler: () => {
-              this.deleteDevice(device);
-            },
-          },
-        ],
+    // Grupları tarihe göre (yeni en üstte) sıralıyoruz
+    this.deviceGroups = Object.keys(grouped)
+      .sort((a, b) => {
+        const dateA = new Date(this.parseDate(a));
+        const dateB = new Date(this.parseDate(b));
+        return dateB.getTime() - dateA.getTime();
       })
-      .then((alertEl) => {
-        alertEl.present();
+      .map((date) => {
+        return {
+          date,
+          devices: grouped[date],
+        };
       });
   }
 
-  deleteDevice(device: any) {
-    // Silme işleminde gerekli payload
-    const payload:any = { deviceid: device.id };
-    this.deviceService.deleteDevice(payload).subscribe(
-      (response) => {
-        this.toastService.showToast('Cihaz silindi');
-        // Listeyi güncellemek için cihaz listesini tekrar alıyoruz.
-        this.getEmployeeDevices();
-      },
-      (error) => {
-        this.toastService.showToast('Silme işlemi başarısız');
-        console.error(error);
-      }
-    );
+  // Tarih formatlama (dd.MM.yyyy)
+  formatDate(date: Date): string {
+    const options = { day: '2-digit', month: '2-digit', year: 'numeric' } as const;
+    return date.toLocaleDateString('tr-TR', options);
   }
 
-  toggleSearchbar() {
-    this.showSearchbar = !this.showSearchbar;
+  // dd.MM.yyyy formatındaki tarihi Date objesine çevirir.
+  parseDate(dateString: string): string {
+    const parts = dateString.split('.');
+    const day = parseInt(parts[0], 10);
+    const month = parseInt(parts[1], 10) - 1;
+    const year = parseInt(parts[2], 10);
+    return new Date(year, month, day).toISOString();
   }
 
-  filterDevices() {
-    // İsteğe bağlı: queryText ile cihazları filtreleyebilirsiniz.
-    // Örneğin; this.devices üzerinden filtreleme yapıp deviceGroups'u yeniden oluşturabilirsiniz.
+  refreshDevices() {
+    this.getDevices();
   }
+
+  // Gelen cihazın uniq id'si, mevcut (current) cihazın benzersiz id'si ile eşleşiyorsa "Bu Cihaz" gösterilir.
+  isCurrentDevice(deviceUniqId: string): boolean {
+    return deviceUniqId === this.currentDeviceUniqId;
+  }
+
+  // Silme işleminden önce onay alır.
+  async confirmDelete(device: any) {
+    const alert = await this.alertCtrl.create({
+      header: 'Cihaz Sil',
+      message: 'Cihazı silmek istediğinize emin misiniz?',
+      buttons: [
+        { text: 'İptal', role: 'cancel' },
+        { text: 'Sil', handler: () => this.deleteDevice(device) },
+      ],
+    });
+    await alert.present();
+  }
+
+  // İlgili cihazı siler ve listeyi günceller.
+  deleteDevice2(device: any) {
+
+
+    this.toastService.showToast('Cihaz sislimesi gösteilrdi');
+    // this.deviceService.deleteDevice({ deviceid: device.deviceId }).subscribe((response) => {
+    //   this.toastService.showToast(response.message);
+    //   this.devices = this.devices.filter((d) => d.deviceId !== device.deviceId);
+    //   this.updateDeviceGroups();
+    // });
+  }
+
+  deleteDevice(deviceId:number){
+    this.deviceService.deleteDevice(deviceId).subscribe((response) => {
+      this.toastService.showToast(response.message);
+      this.devices = this.devices.filter((d) => d.deviceId !== deviceId);
+      this.updateDeviceGroups();
+      this.refreshDevices();
+    });
+  }
+
+
 }

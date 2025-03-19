@@ -34,7 +34,7 @@ export class DeviceInformationService {
         manufacturer: info.manufacturer,
         
         lastContactDate: new Date(),        // Örnek olarak mevcut tarih
-        registarationDate: new Date(),        // Örnek olarak kayıt tarihini de şimdiden atıyoruz
+        registrationDate: new Date(),        // Örnek olarak kayıt tarihini de şimdiden atıyoruz
         status: true                         // Varsayılan olarak aktif
       };
 
@@ -59,4 +59,54 @@ export class DeviceInformationService {
       console.error('Cihaz bilgileri alınırken hata:', error);
     }
   }
+
+
+
+  async gatherRealDeviceInfo(): Promise<Device> {
+    try {
+      const { identifier } = await CapacitorDevice.getId();
+      const info = await CapacitorDevice.getInfo();
+
+      const device: Device = {
+        deviceId: 0, // Backend oluşturacak veya ataması yapılacak.
+        employeeId: 0, // Uygulamanıza göre düzenleyin.
+        deviceUniqId: identifier,
+        deviceName: info.model,
+        platform: info.operatingSystem,
+        osVersion: info.osVersion,
+        manufacturer: info.manufacturer,
+        lastContactDate: new Date(),
+        registrationDate: new Date(),
+        status: true
+      };
+
+      console.log('Toplanan Cihaz Bilgileri:', device);
+      return device;
+    } catch (error) {
+      console.error('Cihaz bilgisi alınırken hata:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Backend’e cihaz bilgisini ekler.
+   */
+  addDevice(device: Device): void {
+    this.deviceService.addDevice(device).subscribe(
+      (response) => {
+        if (response.success) {
+          console.log('Cihaz başarıyla eklendi:', response.data);
+        } else {
+          console.error('Cihaz ekleme hatası:', response.message);
+        }
+      },
+      (error) => {
+        console.error('HTTP Hatası:', error);
+      }
+    );
+  }
+
+
+
+
 }

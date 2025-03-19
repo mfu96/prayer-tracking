@@ -7,7 +7,7 @@ export interface Device{
     osVersion: string,
     manufacturer: string,
     lastContactDate:Date,
-    registarationDate:Date,
+    registrationDate:Date,
     status:boolean
 
 }

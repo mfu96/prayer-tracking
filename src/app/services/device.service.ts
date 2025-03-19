@@ -25,7 +25,7 @@ export class DeviceService {
 
       
         deleteDevice(deviceId:number):Observable<SingleResponseModel<Device>>{
-          return this.httpClient.post<SingleResponseModel<Device>>(this.apiUrl+ 'prayertimes/delete', deviceId  );
+          return this.httpClient.post<SingleResponseModel<Device>>(this.apiUrl+ 'devices/delete', deviceId  );
       
         }
 }

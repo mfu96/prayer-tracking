@@ -1,75 +1,52 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>devices</ion-title>
-  </ion-toolbar>
-</ion-header>
-
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">devices</ion-title>
-    </ion-toolbar>
-  </ion-header>
-</ion-content>
-<ion-header [translucent]="true">
-  <ion-toolbar>
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title>Cihazlarım</ion-title>
     <ion-buttons slot="end">
-      <ion-button (click)="toggleSearchbar()">
-        <ion-icon slot="icon-only" name="search"></ion-icon>
+      <ion-button (click)="refreshDevices()">
+        <ion-icon slot="icon-only" name="reload-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-  </ion-toolbar>
-
-  <!-- Arama Çubuğu -->
-  <ion-toolbar *ngIf="showSearchbar">
-    <ion-searchbar
-      [(ngModel)]="queryText"
-      (ionInput)="filterDevices()"
-      placeholder="Cihaz Ara"
-      showCancelButton="always"
-      (ionCancel)="toggleSearchbar()"
-    ></ion-searchbar>
   </ion-toolbar>
 </ion-header>
 
 <ion-content fullscreen="true">
   <ion-list>
-    <!-- Cihazları tarihe göre gruplayarak listelemek -->
     <ion-item-group *ngFor="let group of deviceGroups">
       <ion-item-divider sticky>
         <ion-label>{{ group.date }}</ion-label>
       </ion-item-divider>
 
-      <!-- Her cihaz için sliding liste kullanımı -->
       <ion-item-sliding *ngFor="let device of group.devices">
         <ion-item>
           <ion-grid>
-            <!-- İlk Satır: Üretici + Model ve eşleşme kontrolü -->
+            <!-- Üstte: Kayıt Tarihi (Tekrar göstermeye gerek kalmayabilir fakat isteğe bağlı) -->
+            <!-- Cihaz Üreticisi ve Modeli ile "Bu Cihaz" etiketi -->
             <ion-row>
-              <ion-col size="8">
-                <h3>{{ device.manufacturer }} {{ device.model }}</h3>
+              <ion-col size="6">
+                <h6>{{ device.manufacturer | uppercase }} {{ device.deviceName }}</h6>
               </ion-col>
-              <ion-col size="4" class="ion-text-right" *ngIf="device.uniqueId === currentDeviceUniqueId">
-                <span class="highlight">Bu Cihaz</span>
+              <ion-col size="6" class="ion-text-right">
+                <span *ngIf="isCurrentDevice(device.deviceUniqId)" class="current-device">
+                  Bu Cihaz
+                </span>
               </ion-col>
             </ion-row>
-            <!-- İkinci Satır: Son Erişim saati ve Durumu -->
+            <!-- Son Erişim Saati ve Durumu -->
             <ion-row>
-              <ion-col size="8">
-                <p>Son Erişim: {{ device.lastAccessTime }}</p>
+              <ion-col size="6">
+                <p>Son Erişim: {{ device.lastContactDate | date: 'HH:mm' }}</p>
               </ion-col>
-              <ion-col size="4" class="ion-text-right">
-                <p>Durumu: {{ device.status }}</p>
+              <ion-col size="6" class="ion-text-right">
+                <p>Durumu: {{ device.status ? 'Aktif' : 'Pasif' }}</p>
               </ion-col>
             </ion-row>
           </ion-grid>
         </ion-item>
 
-        <!-- Silme seçeneği -->
+        <!-- Sola kaydırınca çıkan silme butonu -->
         <ion-item-options side="end">
           <ion-item-option color="danger" (click)="confirmDelete(device)">
             <ion-icon slot="icon-only" name="trash"></ion-icon>
@@ -78,4 +55,6 @@
       </ion-item-sliding>
     </ion-item-group>
   </ion-list>
+
+
 </ion-content>

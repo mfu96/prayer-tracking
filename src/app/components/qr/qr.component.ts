@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { IonicModule, Platform } from '@ionic/angular';
 import { LocationService } from 'src/app/services/location.service';
 import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
+import { DeviceInformationService } from 'src/app/services/device-information.service';
 
 @Component({
   selector: 'app-qr',
@@ -17,7 +18,8 @@ export class QrComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private locationService: LocationService,
-    private platform: Platform
+    private platform: Platform,
+    private deviceInformation: DeviceInformationService
   ) {}
 
   async ngOnInit() {
@@ -79,11 +81,13 @@ export class QrComponent implements OnInit, OnDestroy {
     const companyId = parseInt(dataParts[2], 10);
     const generatedDate = dataParts[3];
     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
+
+    
     const prayerData = {
       prayerName: '',
       mosqueId: mosqueId,
       companyId: companyId,
-      deviceId: 3,
+      deviceId: 19    //buryı dinmik hale getir db ile uyuşmayıncae eklemeiyor buradan çıkan hatayı yazdırablirsen de güzel olur
     };
     this.router.navigate(['/prayer-add'], { state: { prayerData } });
   }
