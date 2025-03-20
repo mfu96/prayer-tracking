@@ -13,63 +13,19 @@ export class DeviceInformationService {
   constructor(private deviceService: DeviceService) {}
 
   /**
-   * Cihaz bilgilerini alır, eşleştirir ve backend’e gönderir.
+   * Gerçek cihaz bilgilerini alır.
    */
-  async gatherAndSendDeviceInfo(): Promise<void> {
+  async gatherRealDeviceInfo(): Promise<Device> {
     try {
       // 1. Cihazın benzersiz kimliğini alıyoruz.
       const { identifier } = await CapacitorDevice.getId();
-      
-      // 2. Cihaz bilgilerini alıyoruz.
+      // 2. Cihazın diğer bilgilerini alıyoruz.
       const info = await CapacitorDevice.getInfo();
 
       // 3. Backend’e uygun Device objesini oluşturuyoruz.
       const device: Device = {
-        deviceId: 0, // Backend oluşturacak ya da sabit bir değer atayabilirsiniz.
-        employeeId: 0, // İhtiyacınıza göre doldurun.
-        deviceUniqId: identifier,
-        deviceName: info.model,
-        platform: info.operatingSystem,
-        osVersion: info.osVersion,
-        manufacturer: info.manufacturer,
-        
-        lastContactDate: new Date(),        // Örnek olarak mevcut tarih
-        registrationDate: new Date(),        // Örnek olarak kayıt tarihini de şimdiden atıyoruz
-        status: true                         // Varsayılan olarak aktif
-      };
-
-      // Bilgileri konsola yazdırma (debug amaçlı)
-      console.log('Gönderilecek Cihaz Bilgileri:', device);
-
-      // 4. DeviceService üzerinden backend’e POST çağrısı yapıyoruz.
-      this.deviceService.addDevice(device).subscribe(
-        response => {
-          if (response.success) {
-            console.log('Cihaz başarıyla eklendi:', response.data);
-          } else {
-            console.error('Cihaz ekleme hatası:', response.message);
-          }
-        },
-        error => {
-          console.error('HTTP Hatası:', error);
-        }
-      );
-
-    } catch (error) {
-      console.error('Cihaz bilgileri alınırken hata:', error);
-    }
-  }
-
-
-
-  async gatherRealDeviceInfo(): Promise<Device> {
-    try {
-      const { identifier } = await CapacitorDevice.getId();
-      const info = await CapacitorDevice.getInfo();
-
-      const device: Device = {
-        deviceId: 0, // Backend oluşturacak veya ataması yapılacak.
-        employeeId: 0, // Uygulamanıza göre düzenleyin.
+        deviceId: 0,         // Backend oluşturacak veya uygun değer atanabilir.
+        employeeId: 0,       // Uygulamanıza göre düzenleyin.
         deviceUniqId: identifier,
         deviceName: info.model,
         platform: info.operatingSystem,
@@ -89,24 +45,25 @@ export class DeviceInformationService {
   }
 
   /**
-   * Backend’e cihaz bilgisini ekler.
+   * Gerçek cihaz bilgilerini alır ve ardından backend’e gönderir.
    */
-  addDevice(device: Device): void {
-    this.deviceService.addDevice(device).subscribe(
-      (response) => {
-        if (response.success) {
-          console.log('Cihaz başarıyla eklendi:', response.data);
-        } else {
-          console.error('Cihaz ekleme hatası:', response.message);
+  async addDevice(): Promise<void> {
+    try {
+      const device = await this.gatherRealDeviceInfo();
+      this.deviceService.addDevice(device).subscribe(
+        (response) => {
+          if (response.success) {
+            console.log('Cihaz başarıyla eklendi:', response.data);
+          } else {
+            console.error('Cihaz ekleme hatası:', response.message);
+          }
+        },
+        (error) => {
+          console.error('HTTP Hatası:', error);
         }
-      },
-      (error) => {
-        console.error('HTTP Hatası:', error);
-      }
-    );
+      );
+    } catch (error) {
+      console.error('Cihaz eklenirken hata oluştu:', error);
+    }
   }
-
-
-
-
 }

@@ -13,7 +13,7 @@ export class Tab3Page {
 
   async ngOnInit() {
     // Sayfa yüklendiğinde cihaz bilgilerini al ve konsola yazdır
-    await this.deviceInfoService.gatherAndSendDeviceInfo();
+    await this.deviceInfoService.addDevice();
   }
 
 }

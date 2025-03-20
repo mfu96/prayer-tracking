@@ -190,8 +190,8 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
     },
 
       (error) => { // Hata varsa
-        console.error('Namaz vakti eklenirken hata oluştu:', error.message); // Konsola yazar
-        this.toastService.showToast('Namaz vakti eklenirken bir hata oluştu.'); // Kullanıcıya uyarı
+        console.error('Namaz vakti eklenirken hata oluştu:',    error.error.message); // Konsola yazar
+        this.toastService.showToast( error.error.message); // Kullanıcıya uyarı
         this.loadingService.hideLoading(); // Hata durumunda da gizle
       }
     );

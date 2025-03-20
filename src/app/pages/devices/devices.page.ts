@@ -45,6 +45,8 @@ export class DevicesPage implements OnInit {
       this.devices = response.data.sort((a, b) =>
         new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime()
       );
+
+      console.log('Cihazlar:', this.devices);
       this.updateDeviceGroups();
 
       const message = response.message ? response.message + ' Listelendi' : 'Cihazlar Listelendi';
@@ -118,16 +120,10 @@ export class DevicesPage implements OnInit {
   }
 
   // İlgili cihazı siler ve listeyi günceller.
-  deleteDevice2(device: any) {
+ 
 
 
-    this.toastService.showToast('Cihaz sislimesi gösteilrdi');
-    // this.deviceService.deleteDevice({ deviceid: device.deviceId }).subscribe((response) => {
-    //   this.toastService.showToast(response.message);
-    //   this.devices = this.devices.filter((d) => d.deviceId !== device.deviceId);
-    //   this.updateDeviceGroups();
-    // });
-  }
+  //buraya ture olanı silme koşulu eklenecek
 
   deleteDevice(deviceId:number){
     this.deviceService.deleteDevice(deviceId).subscribe((response) => {

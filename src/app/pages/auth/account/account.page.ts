@@ -30,7 +30,7 @@ export class AccountPage{
 
   ionViewDidEnter() {
     this.getUsername();
-    this.deviceInfoService.gatherAndSendDeviceInfo();
+    this.deviceInfoService.addDevice();
   }
 
   getUsername() {

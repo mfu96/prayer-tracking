@@ -5,6 +5,7 @@ import { IonicModule, Platform } from '@ionic/angular';
 import { LocationService } from 'src/app/services/location.service';
 import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
 import { DeviceInformationService } from 'src/app/services/device-information.service';
+import { DeviceService } from 'src/app/services/device.service';
 
 @Component({
   selector: 'app-qr',
@@ -19,7 +20,7 @@ export class QrComponent implements OnInit, OnDestroy {
     private router: Router,
     private locationService: LocationService,
     private platform: Platform,
-    private deviceInformation: DeviceInformationService
+    private deviceService: DeviceService
   ) {}
 
   async ngOnInit() {
@@ -82,13 +83,32 @@ export class QrComponent implements OnInit, OnDestroy {
     const generatedDate = dataParts[3];
     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
 
-    
-    const prayerData = {
-      prayerName: '',
-      mosqueId: mosqueId,
-      companyId: companyId,
-      deviceId: 19    //buryı dinmik hale getir db ile uyuşmayıncae eklemeiyor buradan çıkan hatayı yazdırablirsen de güzel olur
-    };
-    this.router.navigate(['/prayer-add'], { state: { prayerData } });
-  }
+    // Device id bilgisini cihaz servisten alıyoruz.
+  this.deviceService.getEmployeeDevices().subscribe(
+    response => {
+      if (response && response.data && response.data.length > 0) {
+        // Cihaz listesinin ilk elemanını kullanıyoruz. (Modelinize göre "id" veya "deviceId" olabilir)
+        const device = response.data[0];
+        const deviceId =  device.deviceId; 
+
+        const prayerData = {
+          prayerName: '',
+          mosqueId: mosqueId,
+          companyId: companyId,
+          deviceId: deviceId
+        };
+
+        // Cihaz bilgisini aldıktan sonra yönlendirme işlemini gerçekleştirin.
+        this.router.navigate(['/prayer-add'], { state: { prayerData } });
+      } else {
+        console.log('Çalışana ait cihaz bulunamadı');
+        // İsteğe bağlı: Hata durumunda bir default değer atayabilir veya kullanıcıya uyarı verebilirsiniz.
+      }
+    },
+    error => {
+      console.error('Cihaz bilgileri alınırken hata oluştu:', error);
+      // Gerekirse kullanıcıya hata mesajı gösterebilir veya alternatif bir işlem uygulayabilirsiniz.
+    }
+  );
+}
 }
