@@ -62,6 +62,10 @@ export class LoginPage  {
         },
         (error) => {
           console.log('Hata:', error);
+          this.toast.showToast('Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
+        
+          console.log(error.error);
+    
         }
       );
     }

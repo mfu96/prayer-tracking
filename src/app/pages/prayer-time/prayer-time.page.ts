@@ -79,7 +79,8 @@ ionViewWillEnter() {
 getPrayerUserDetail(){
   this.prayerService.getPrayerByUserDetail().subscribe((response) => {
     this.prayerDetails=response.data
-    this.toastService.showToast(response.message+ "Vakitler Listelendi")
+    this.toastService.showToast(response.message)
+    console.log(response.message)
     console.log(response)
     this.updatePrayerGroups();
   });

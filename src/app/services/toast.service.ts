@@ -13,7 +13,7 @@ export class ToastService {
     const toast = await this.toastController.create({
       message, // Gösterilecek mesaj
       duration, // Gösterim süresi (varsayılan 2 saniye)
-      position: 'middle' // 'top', 'middle' veya 'bottom'
+      position: 'bottom' // 'top', 'middle' veya 'bottom'
      
 
     });

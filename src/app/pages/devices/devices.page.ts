@@ -125,14 +125,38 @@ export class DevicesPage implements OnInit {
 
   //buraya ture olanı silme koşulu eklenecek
 
-  deleteDevice(deviceId:number){
-    this.deviceService.deleteDevice(deviceId).subscribe((response) => {
-      this.toastService.showToast(response.message);
-      this.devices = this.devices.filter((d) => d.deviceId !== deviceId);
-      this.updateDeviceGroups();
-      this.refreshDevices();
-    });
-  }
+  // deleteDevice(deviceId:number){
+  //   this.deviceService.deleteDevice(deviceId).subscribe((response) => {
+  //     this.toastService.showToast(response.message);
+  //     this.devices = this.devices.filter((d) => d.deviceId !== deviceId);
+  //     this.updateDeviceGroups();
+  //     this.refreshDevices();
+  //   });
+  // }
+
+
+    // İlgili cihazı siler ve listeyi günceller.
+    deleteDevice(device: any) {
+      // Ek güvenlik kontrolü: Eğer cihazın status değeri true ise,
+      // herhangi bir silme işlemi gerçekleştirmiyoruz.
+      if (device.status) {
+        this.toastService.showToast('Aktif cihazı silmek için bağlı bulunduğunuz Müftülüğe başvurun.');
+        return;
+      }
+      console.log('Silinen cihaz:', device.deviceId);
+  
+      this.deviceService.deleteDevice(device.deviceId).subscribe((response) => {
+        this.toastService.showToast(response.message);
+        //console.log(response.message);
+
+        // Listeden silinen cihazı çıkarıyoruz.
+       // console.log('Silinen cihaz:', device.deviceId);
+        this.devices = this.devices.filter((d) => d.deviceId !== device.deviceId);
+        //console.log('Kalan cihazlar:', this.devices);
+        this.updateDeviceGroups();
+        //this.refreshDevices();
+      });
+    }
 
 
 }

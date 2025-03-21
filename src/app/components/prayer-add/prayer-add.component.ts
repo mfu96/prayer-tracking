@@ -144,7 +144,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       if (this.alertInstance) { // Alert hala açıksa
         this.alertInstance.dismiss(); // Alert'u kapatır
-        this.router.navigate(['/qr']); // QR sayfasına yönlendirir
+        this.router.navigate(['/']); // QR sayfasına yönlendirir
         this.toastService.showToast('Zaman aşımına uğradı. Lütfen tekrar deneyin.'); // Uyarı gösterir
       }
     }, 180000); // 3 dakika (180 saniye)

@@ -59,7 +59,7 @@ export class AccountPage{
   }
 
   devices(){
-    return this.router.navigate(['/devices']);
+    return this.router.navigate(['/tabs/devices']);
   }
 
 }

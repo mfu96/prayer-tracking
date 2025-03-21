@@ -6,6 +6,7 @@ import { LocationService } from 'src/app/services/location.service';
 import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning';
 import { DeviceInformationService } from 'src/app/services/device-information.service';
 import { DeviceService } from 'src/app/services/device.service';
+import { ToastService } from 'src/app/services/toast.service';
 
 @Component({
   selector: 'app-qr',
@@ -20,7 +21,8 @@ export class QrComponent implements OnInit, OnDestroy {
     private router: Router,
     private locationService: LocationService,
     private platform: Platform,
-    private deviceService: DeviceService
+    private deviceService: DeviceService,
+    private toastService: ToastService
   ) {}
 
   async ngOnInit() {
@@ -51,6 +53,7 @@ export class QrComponent implements OnInit, OnDestroy {
       const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
       if (!available) {
         console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
+        this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
         await BarcodeScanner.installGoogleBarcodeScannerModule();
         console.log('Modül yüklendi.');
       }
@@ -111,4 +114,6 @@ export class QrComponent implements OnInit, OnDestroy {
     }
   );
 }
+
+
 }
