@@ -41,26 +41,38 @@ export class QrComponent implements OnInit, OnDestroy {
   }
 
   async checkPermissions() {
+    // Hem Android hem iOS için ortak izin kontrolü
     const { camera } = await BarcodeScanner.requestPermissions();
     if (camera !== 'granted') {
-      console.error('Kamera izni verilmedi.');
+      this.toastService.showToast('Kamera izni gereklidir!');
+      throw new Error('Camera permission denied');
     }
   }
 
   async scan() {
     this.scanning = true;
     try {
-      const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
-      if (!available) {
-        console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
-        this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
-        await BarcodeScanner.installGoogleBarcodeScannerModule();
-        console.log('Modül yüklendi.');
-      }
+      
+
+          // 1. PLATFORM KONTROLÜ EKLEYİN
+          if (this.platform.is('android')) {
+            const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+            if (!available) {
+              console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
+
+              this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
+              await BarcodeScanner.installGoogleBarcodeScannerModule();
+              console.log('Modül yüklendi.');
+
+            }
+          }
+
+
       document.body.classList.add('barcode-scanner-active');
       const { barcodes } = await BarcodeScanner.scan({
         formats: [BarcodeFormat.QrCode],
       });
+
       if (barcodes.length > 0) {
         const scannedData = barcodes[0].rawValue;
         console.log('Taranan barkod içeriği:', scannedData);
@@ -68,6 +80,7 @@ export class QrComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Tarama hatası:', error);
+
     } finally {
       document.body.classList.remove('barcode-scanner-active');
       this.scanning = false;

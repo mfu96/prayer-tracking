@@ -2,8 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) Kare kod taramak için Kamera izinine ihtiyacımız var.</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>en</string>
+	<string>tr</string>
 	<key>CFBundleDisplayName</key>
 	<string>prayer-tracking</string>
 	<key>CFBundleExecutable</key>
@@ -24,8 +26,6 @@
 	<string></string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) QR kodu taramak için kamera iznine ihtiyacım var</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Namaz vaktini ekleyebilmek için konum bilginize ihtiyacmız var.</string>
 	<key>UILaunchStoryboardName</key>

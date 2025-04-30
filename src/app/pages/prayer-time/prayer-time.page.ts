@@ -217,6 +217,7 @@ getPrayerUserDetail(){
     const isLocationEnabled = await this.locationService.isLocationServiceEnabled(); // Konum servisini kontrol eder
     if (isLocationEnabled) {
       this.router.navigate(['/qr']); // Konum açıksa QR sayfasına gider
+      console.log('Konum servisi açık. QR tarayıcıya yönlendiriliyor...');
     } else {
       this.toastService.showToast('Konum servisi kapalı. Lütfen açın.'); // Kapalıysa uyarı gösterir
     }

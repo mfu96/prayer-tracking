@@ -1,4 +1,4 @@
-package io.ionic.starter;
+package com.mfu.prayertracking;
 
 import com.getcapacitor.BridgeActivity;
 
