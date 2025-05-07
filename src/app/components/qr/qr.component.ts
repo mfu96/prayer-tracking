@@ -7,6 +7,7 @@ import { BarcodeScanner, BarcodeFormat } from '@capacitor-mlkit/barcode-scanning
 import { DeviceInformationService } from 'src/app/services/device-information.service';
 import { DeviceService } from 'src/app/services/device.service';
 import { ToastService } from 'src/app/services/toast.service';
+import { Storage } from '@ionic/storage-angular';
 
 @Component({
   selector: 'app-qr',
@@ -22,7 +23,8 @@ export class QrComponent implements OnInit, OnDestroy {
     private locationService: LocationService,
     private platform: Platform,
     private deviceService: DeviceService,
-    private toastService: ToastService
+    private toastService: ToastService,
+    private storage: Storage
   ) {}
 
   async ngOnInit() {
@@ -41,38 +43,30 @@ export class QrComponent implements OnInit, OnDestroy {
   }
 
   async checkPermissions() {
-    // Hem Android hem iOS için ortak izin kontrolü
     const { camera } = await BarcodeScanner.requestPermissions();
     if (camera !== 'granted') {
-      this.toastService.showToast('Kamera izni gereklidir!');
-      throw new Error('Camera permission denied');
+      console.error('Kamera izni verilmedi.');
     }
   }
 
   async scan() {
     this.scanning = true;
     try {
-      
-
-          // 1. PLATFORM KONTROLÜ EKLEYİN
-          if (this.platform.is('android')) {
-            const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
-            if (!available) {
-              console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
-
-              this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
-              await BarcodeScanner.installGoogleBarcodeScannerModule();
-              console.log('Modül yüklendi.');
-
-            }
-          }
-
-
+      // Yalnızca Android için modül kontrolü ve yükleme işlemleri yapılacak
+      if (this.platform.is('android')) {
+        const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
+        if (!available) {
+          console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
+          this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
+          await BarcodeScanner.installGoogleBarcodeScannerModule();
+          console.log('Modül yüklendi.');
+        }
+      }
+          // iOS için yukarıdaki kontrol atlanır
       document.body.classList.add('barcode-scanner-active');
       const { barcodes } = await BarcodeScanner.scan({
         formats: [BarcodeFormat.QrCode],
       });
-
       if (barcodes.length > 0) {
         const scannedData = barcodes[0].rawValue;
         console.log('Taranan barkod içeriği:', scannedData);
@@ -80,7 +74,6 @@ export class QrComponent implements OnInit, OnDestroy {
       }
     } catch (error) {
       console.error('Tarama hatası:', error);
-
     } finally {
       document.body.classList.remove('barcode-scanner-active');
       this.scanning = false;
@@ -98,6 +91,16 @@ export class QrComponent implements OnInit, OnDestroy {
     const companyId = parseInt(dataParts[2], 10);
     const generatedDate = dataParts[3];
     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
+
+
+ // Storage'e mosqueId bilgisini kaydediyoruz (indeks notasyonu ile).
+ this.storage['set']('mosqueId', mosqueId)
+ .then(() => {
+   console.log('Mosque ID storage\'a kaydedildi:', mosqueId);
+ })
+ .catch((error: any) => {
+   console.error('Mosque ID storage\'a kayıt hatası:', error);
+ });
 
     // Device id bilgisini cihaz servisten alıyoruz.
   this.deviceService.getEmployeeDevices().subscribe(
@@ -127,6 +130,4 @@ export class QrComponent implements OnInit, OnDestroy {
     }
   );
 }
-
-
 }
