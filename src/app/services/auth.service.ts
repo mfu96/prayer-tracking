@@ -142,5 +142,11 @@ setUser(email: string) {
       return value;
     });
   }
+
+   getMosqueid(): Promise<number> {
+    return this.storage.get('mosqueId').then(value => {
+      return value;
+    });
+  }
   
 }

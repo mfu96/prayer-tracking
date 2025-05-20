@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-mosque',
@@ -8,9 +9,20 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MosquePage implements OnInit {
 
-  constructor() { }
+   mosqueId: number;
+
+  constructor(
+    private authService:AuthService
+  ) { }
 
   ngOnInit() {
   }
 
+
+      gerMosqueId() {
+    this.authService.getMosqueid().then(mosqueId => {
+      this.mosqueId = mosqueId;
+      console.log('Mosque pagediym, mosqu denemesi', mosqueId);
+    });
+  }
 }
