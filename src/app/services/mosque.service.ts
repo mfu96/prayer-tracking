@@ -5,6 +5,8 @@ import { Observable } from 'rxjs';
 import { ListResponseModel } from '../interfaces/responses/listResponseModel';
 import { Mosque } from '../interfaces/entities/mosque';
 import { Storage } from '@ionic/storage-angular';
+import { CarDetailDto } from '../interfaces/entities/carDetailDto';
+import { MosqueDetailDto } from '../interfaces/entities/mosqueDetailDto';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +35,10 @@ export class MosqueService {
     return this.storage.get('mosqueId').then(value => {
       return value;
     });
+  }
+
+    getMosqueByDetail(mosqueId: number):Observable<ListResponseModel<MosqueDetailDto>>{
+    let newPath=this.apiUrl + 'mosques/getbymosquedetails?mosqueId=' + mosqueId;
+    return this.httpClient.get<ListResponseModel<MosqueDetailDto>>(newPath);
   }
 }

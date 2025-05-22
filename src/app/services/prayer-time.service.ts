@@ -33,6 +33,8 @@ export class PrayerTimeService {
     return this.httpClient.get<ListResponseModel<PrayerTimeDetailDto>>(newPath);
   }  
   
+
+  // getPrayersByDetail methodunda pryarerid paramateresini göndermezsen bu methodun yaptığı işi yapar
   getPrayerDetails():Observable<ListResponseModel<PrayerTimeDetailDto>>{
 
     let newPath = this.apiUrl + 'prayertimes/getdetails' ;

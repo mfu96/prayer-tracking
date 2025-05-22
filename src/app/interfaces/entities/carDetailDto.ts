@@ -1,4 +1,4 @@
-import { CarImage } from "./Image";
+import { Image } from "./Image";
 
 export interface CarDetailDto{
    carId:number;
@@ -9,5 +9,5 @@ export interface CarDetailDto{
    unitsInStock:number;
    unitPrice:number;
    companyName:string;
-   imagePaths:CarImage[];
+   imagePaths:Image[];
 }
