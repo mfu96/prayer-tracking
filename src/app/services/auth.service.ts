@@ -53,12 +53,30 @@ export class AuthService {
   }
 
   async logout() {
-    await this.storage.remove('token');
-    await this.storage.remove('expiration');
-    await this.storage.remove('loggedIn');
-    await this.storage.remove('fullName');
-    await this.storage.remove('email');
-    await this.storage.remove('userId');
+    // await this.storage.remove('token');
+    // await this.storage.remove('expiration');
+    // await this.storage.remove('loggedIn');
+    // await this.storage.remove('fullName');
+    // await this.storage.remove('email');
+    // await this.storage.remove('userId');
+    // await this.storage.remove('mosqueId');
+
+    await this.storage.clear(); // Tüm kayıtları temizler
+
+
+    //eğer belli anahtarlaarı korumak istiyorsan böyle yap
+    
+    // const keys = await this.storage.keys(); // Tüm anahtarları al
+
+    // // Silmek istemediğin anahtarları hariç tut
+    // const keysToRemove = keys.filter(key => key !== 'mosqueId');
+
+    // // Seçili anahtarları tek tek kaldır
+    // for (const key of keysToRemove) {
+    //     await this.storage.remove(key);
+    // }
+
+
 
 
     window.dispatchEvent(new Event('user:logout'));

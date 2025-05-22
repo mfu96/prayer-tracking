@@ -19,6 +19,12 @@ export class MosquePage implements OnInit {
     this.getMosqueId();
   }
 
+  ionViewWillEnter() {
+  // Sayfa her göründüğünde namaz vakitlerini güncelle
+  this.getMosqueId();
+  //this.getPrayerDetails();
+}
+
 
   //Mosquenin detayları nı bu meythodlarla alcağız
       getMosqueId() { 
@@ -26,5 +32,10 @@ export class MosquePage implements OnInit {
       this.mosqueId = mosqueId;
       console.log('Mosque pagediym, mosqu denemesi', mosqueId);
     });
+  }
+
+    refresh() {
+    this.getMosqueId();
+    console.log("yenileme yapıldı");
   }
 }

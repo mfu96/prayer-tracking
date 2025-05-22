@@ -199,6 +199,10 @@ getPrayerUserDetail(){
   presentFilter() {
     // Filtre modalini açma kodu (eğer kullanıyorsanız)
   }
+    refresh() {
+    this.getPrayerUserDetail();
+    console.log("yenileme yapıldı");
+  }
 
   // Diğer fonksiyonlar (addFavorite, removeFavorite, openSocial, vb.) burada olabilir
 
