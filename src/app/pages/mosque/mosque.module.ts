@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -15,6 +15,8 @@ import { MosquePage } from './mosque.page';
     IonicModule,
     MosquePageRoutingModule
   ],
-  declarations: [MosquePage]
+  declarations: [MosquePage],
+    schemas: [CUSTOM_ELEMENTS_SCHEMA] // Swiper.js web bileşenleri için buraya ekleyin
+
 })
 export class MosquePageModule {}

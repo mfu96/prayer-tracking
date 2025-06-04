@@ -1,0 +1,137 @@
+// Global Ionic variables and theme overrides can go here if needed
+// @import "theme/variables";
+
+ion-toolbar {
+  --background: transparent;
+  --color: white; // Başlık ve buton renkleri için
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 10; // Slider'ın üzerinde kalması için
+}
+
+ion-toolbar ion-button,
+ion-toolbar ion-back-button,
+ion-toolbar ion-menu-button {
+  --color: white; // Buton ikonlarının rengi
+}
+
+
+
+.placeholder-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ion-color-medium);
+}
+
+.mosque-header {
+  position: relative;
+  width: 100%;
+  height: 30vh; // Yüksekliği ayarlayabilirsiniz
+  background-color: #f0f0f0; // Resimler yüklenene kadar bir arka plan
+
+  swiper-container { // ion-slides yerine swiper-container
+    width: 100%;
+    height: 100%;
+
+    // Swiper pagination (noktalar) için stiller
+    // Bu değişkenler Swiper tarafından sağlanır ve özelleştirilebilir
+    --swiper-pagination-color: var(--ion-color-primary, #3880ff); // Aktif nokta rengi
+    --swiper-pagination-bullet-inactive-color: var(--ion-color-step-400, #999999); // Pasif nokta rengi
+    --swiper-pagination-bullet-size: 8px;
+    --swiper-pagination-bullet-horizontal-gap: 4px;
+    // --swiper-pagination-bottom: 10px; // Noktaların konumunu ayarlamak için
+  }
+
+  .slide-image {
+    display: block; // Bazen dikey hizalama sorunlarını çözer
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .placeholder-header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; // .mosque-header yüksekliğini kaplasın
+    color: var(--ion-color-medium);
+  }
+}
+
+
+
+.mosque-info {
+  position: relative;
+  margin-top: -20px; // Slider ile ne kadar üst üste bineceğini ayarlar
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background: var(--ion-background-color, #ffffff);
+  z-index: 2; // display rounded border above header image
+  padding-bottom: 20px; // En altta biraz boşluk bırakmak için
+}
+
+.mosque-info h3 {
+  margin-top: 0;
+  font-weight: 700; // Kalın başlıklar için
+  padding-left: var(--ion-padding, 16px); // ion-padding-start yerine
+  padding-right: var(--ion-padding, 16px); // ion-padding-end yerine
+}
+
+.mosque-info p {
+  color: var(--ion-color-dark, #222428);
+  line-height: 1.4;
+  padding-left: var(--ion-padding, 16px);
+  padding-right: var(--ion-padding, 16px);
+}
+
+.mosque-info ion-list {
+  padding-top: 0;
+  background: transparent; // Arka plan rengini info bölümüyle aynı yapar
+}
+
+.mosque-info ion-item {
+  --background: transparent; // Item arka planını kaldırır
+  --inner-padding-end: var(--ion-padding, 16px); // İç sağ boşluk
+  --padding-start: var(--ion-padding, 16px); // Sol boşluk
+    display: flex;
+  align-items: center; // Dikey hizalamayı sağlar
+}
+
+.mosque-info ion-icon {
+  margin-inline-end: 16px; // İkon ile metin arası boşluk
+  font-size: 1.4em; // İkon boyutunu biraz büyütür
+  color: var(--ion-color-primary); // İkon rengi
+}
+
+.mosque-info ion-label h2 {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.mosque-info ion-label p {
+  font-size: 0.9em;
+  color: var(--ion-color-medium-shade, #555555);
+  padding-left: 0; // p içindeki padding'i sıfırla, item'dan alsın
+  padding-right: 0;
+}
+
+
+/* iOS Özel Stilleri (about.scss'den alındı, gerekirse ayarlanabilir) */
+.ios .mosque-info {
+   --ion-padding: 19px; // Eğer padding'i iOS için özelleştirmek isterseniz
+}
+
+.ios .mosque-info h3 {
+  font-weight: 700;
+}
+
+
+// ÖNERİLEN EKLEME
+.clickable-address {
+  cursor: pointer; // Fare imlecini el işareti yapar, tıklanabilirliği belirtir
+}
+

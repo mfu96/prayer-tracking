@@ -1,12 +1,11 @@
 export interface Mosque{
     mosqueId:number,
     mosqueName:string,
-    MosqueLatitude:number,
-    MosqueLongitude:number,
+    mosqueLatitude:number,
+    mosqueLongitude:number,
     companyId:number,
-    userId:number,
-    employeeId:number
-
+    description:string,
+    shift:string,
 
 
 }
