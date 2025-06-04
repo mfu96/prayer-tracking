@@ -40,7 +40,7 @@ export class LoginPage  {
             await this.storage.set('token', response.data.token);
             await this.storage.set('expiration', response.data.expiration);
             await this.storage.set('loggedIn', true);
-            await this.storage.set('mosqueId', 2);  //https sorunu olduğu için deneme amaçlı koydum
+           // await this.storage.set('mosqueId', 2);  //https sorunu olduğu için deneme amaçlı koydum
 
             
             await this.authService.setUser(this.login.email);
