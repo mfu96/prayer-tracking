@@ -40,7 +40,7 @@ export class LoginPage  {
             await this.storage.set('token', response.data.token);
             await this.storage.set('expiration', response.data.expiration);
             await this.storage.set('loggedIn', true);
-           // await this.storage.set('mosqueId', 2);  //https sorunu olduğu için deneme amaçlı koydum
+            await this.storage.set('mosqueId', 3);  //https sorunu olduğu için deneme amaçlı koydum
 
             
             await this.authService.setUser(this.login.email);
@@ -50,7 +50,7 @@ export class LoginPage  {
               // Yönlendirme sonrası event gönderilebilir; fakat AccountPage’in ionViewWillEnter’i tetiklenmiş oluyor.
               window.dispatchEvent(new Event('user:login'));
 
-              this.toast.showToast('Giriş başarılı! Anasayfaya yönlendiriliyorsunuz...');
+              this.toast.showToastSuccess('Giriş başarılı! Anasayfaya yönlendiriliyorsunuz...');
               // Wait 3 seconds, then navigate to '/'
               setTimeout(() => {
                 this.router.navigate(['/']);
@@ -64,7 +64,7 @@ export class LoginPage  {
         },
         (error) => {
           console.log('Hata:', error);
-          this.toast.showToast('Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
+          this.toast.showToastWarning('Giriş yapılırken bir hata oluştu. Lütfen tekrar deneyin.');
         
           console.log(error.error);
     

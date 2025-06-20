@@ -38,6 +38,10 @@ const routes: Routes = [
         path:'devices',
         loadChildren: () => import('../pages/devices/devices.module').then( m => m.DevicesPageModule)
       },
+          {
+        path:'qr',
+        loadChildren: () => import('../components/qr/qr.component').then( m => m.QrComponent)
+      },
   
 
       {

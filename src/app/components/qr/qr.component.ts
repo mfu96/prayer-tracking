@@ -48,8 +48,8 @@ export class QrComponent implements OnInit, OnDestroy {
       console.error('Kamera izni verilmedi.');
     }
   }
-
-  async scan() {
+  
+async scan() {
     this.scanning = true;
     try {
       // Yalnızca Android için modül kontrolü ve yükleme işlemleri yapılacak
@@ -57,9 +57,12 @@ export class QrComponent implements OnInit, OnDestroy {
         const { available } = await BarcodeScanner.isGoogleBarcodeScannerModuleAvailable();
         if (!available) {
           console.log('Google Barcode Scanner Modülü yüklü değil. Yükleniyor...');
-          this.toastService.showToast('Barkod tarayıcı modülü yükleniyor...');
+          this.toastService.showToastInfo('Barkod tarayıcı modülü yükleniyor...');
           await BarcodeScanner.installGoogleBarcodeScannerModule();
           console.log('Modül yüklendi.');
+
+           //window.location.href = '/qr';
+
         }
       }
           // iOS için yukarıdaki kontrol atlanır
@@ -79,6 +82,8 @@ export class QrComponent implements OnInit, OnDestroy {
       this.scanning = false;
     }
   }
+
+ 
 
   processScannedData(scannedData: string) {
     const dataParts = scannedData.split(',');

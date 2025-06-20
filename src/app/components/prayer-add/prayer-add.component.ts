@@ -119,7 +119,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
         cssClass: this.canSubmit ? '' : 'button-disabled', // Duruma göre stil
         handler: (data) => { // Butona basıldığında
           if (!this.canSubmit) { // Doğruluk yeterli değilse
-            this.toastService.showToast(
+            this.toastService.showToastWarning(
               `Konum doğruluğunuz ${this.currentAccuracy} mt. Vaktin eklenebilmesi için en az 50 mt olmalı.`
             );
             return false; // Alert kapanmaz
@@ -145,7 +145,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
       if (this.alertInstance) { // Alert hala açıksa
         this.alertInstance.dismiss(); // Alert'u kapatır
         this.router.navigate(['/']); // QR sayfasına yönlendirir
-        this.toastService.showToast('Zaman aşımına uğradı. Lütfen tekrar deneyin.'); // Uyarı gösterir
+        this.toastService.showToastWarning('Zaman aşımına uğradı. Lütfen tekrar deneyin.'); // Uyarı gösterir
       }
     }, 180000); // 3 dakika (180 saniye)
 
@@ -173,14 +173,14 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
       this.prayerData.currentLatitude = position.coords.latitude; // Enlem
       this.prayerData.currentLongitude = position.coords.longitude; // Boylam
     } else {
-      this.toastService.showToast('Konum verisi alınamadı.'); // Konum yoksa uyarı
+      this.toastService.showToastWarning('Konum verisi alınamadı.'); // Konum yoksa uyarı
       return;
     }
     // Namaz vaktini servise gönderir
     this.prayerService.addPrayerTime(this.prayerData).subscribe(
       (response) => { // Başarılıysa
         console.log('Vakit eklendi:', response); // Konsola yazar
-        this.toastService.showToast(response.message); // Kullanıcıya mesaj gösterir
+        this.toastService.showToastSuccess(response.message); // Kullanıcıya mesaj gösterir
         this.loadingService.hideLoading(); // Loading'i gizle
       this.locationService.stopTracking(); // Konum izlemeyi durdur
       if (this.locationSubscription) {
@@ -191,7 +191,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
 
       (error) => { // Hata varsa
         console.error('Namaz vakti eklenirken hata oluştu:',    error.error.message); // Konsola yazar
-        this.toastService.showToast( error.error.message); // Kullanıcıya uyarı
+        this.toastService.showToastWarning( error.error.message); // Kullanıcıya uyarı
         this.loadingService.hideLoading(); // Hata durumunda da gizle
       }
     );

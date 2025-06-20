@@ -50,7 +50,7 @@ export class DevicesPage implements OnInit {
       this.updateDeviceGroups();
 
       const message = response.message ? response.message + ' Listelendi' : 'Cihazlar Listelendi';
-      this.toastService.showToast(message);
+      this.toastService.showToastInfo(message);
       console.log(response);
     });
   }
@@ -140,13 +140,13 @@ export class DevicesPage implements OnInit {
       // Ek güvenlik kontrolü: Eğer cihazın status değeri true ise,
       // herhangi bir silme işlemi gerçekleştirmiyoruz.
       if (device.status) {
-        this.toastService.showToast('Aktif cihazı silmek için bağlı bulunduğunuz Müftülüğe başvurun.');
+        this.toastService.showToastWarning('Aktif cihazı silmek için bağlı bulunduğunuz Müftülüğe başvurun.');
         return;
       }
       console.log('Silinen cihaz:', device.deviceId);
   
       this.deviceService.deleteDevice(device.deviceId).subscribe((response) => {
-        this.toastService.showToast(response.message);
+        this.toastService.showToastSuccess(response.message);
         //console.log(response.message);
 
         // Listeden silinen cihazı çıkarıyoruz.

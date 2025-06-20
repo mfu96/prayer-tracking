@@ -12,7 +12,10 @@
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+
+
   
+  <!-- 2. Resim alanı -->
 
   <div class="mosque-header">
     <swiper-container
@@ -29,21 +32,24 @@
         <img [src]="getImageUrl(img.imagePath)" alt="Mosque Image" class="slide-image"/>
       </swiper-slide>
 
-       <div *ngIf="mosqueImages.length === 0 && initialDataLoaded && mosqueId" class="placeholder-header-content">
+   
+
+    </swiper-container>
+
+        <div *ngIf="mosqueImages.length === 0 && initialDataLoaded && mosqueId" class="placeholder-header-content">
       <p class="ion-text-center">Bu cami için henüz resim eklenmemiş.</p>
     </div>
-    <div *ngIf="!initialDataLoaded && mosqueId" class="placeholder-header-content">
+
+        <div *ngIf="!initialDataLoaded && mosqueId" class="placeholder-header-content">
         <ion-spinner name="crescent"></ion-spinner>
         <p class="ion-text-center ion-margin-top">Resimler yükleniyor...</p>
     </div>
-    </swiper-container>
-    
    
   </div>
 
 
 
-  
+    <!-- 3. Cami bilgileri -->
    <div class="mosque-info" *ngIf="mosqueDetails.length > 0">
     <h3 class="ion-padding-top ion-padding-start">
       {{ mosqueDetails[0].mosqueName }} - {{ mosqueDetails[0].companyName }}
@@ -72,6 +78,8 @@
         <ion-label>
           Cami adresine ulaşmak için dokunun.
         </ion-label>
+          <ion-icon slot="end" name="chevron-forward-outline" color="medium"></ion-icon>
+
       </ion-item>
     </ion-list>
 
@@ -99,11 +107,14 @@
         <h2>Telefon Numarası</h2>
         <p>{{ selectedStaffMember.contact.trim() }}</p>
     </ion-label>
+      <ion-icon slot="end" name="chevron-forward-outline" color="medium"></ion-icon>
+
 </ion-item>
       <ion-item *ngIf="!selectedStaffMember && mosqueDetails.length > 0">
         <ion-label class="ion-text-center">
           <p>Lütfen bir görevli seçiniz.</p>
         </ion-label>
+        
       </ion-item>
     </ion-list>
 
@@ -113,11 +124,16 @@
 
   </div>
 
-
-
-  <div class="mosque-info ion-padding" *ngIf="!initialDataLoaded && !mosqueId">
-      <p class="ion-text-center">Cami bilgileri yükleniyor...</p>
+     <!-- 1. Sayfa ortası spinner -->
+  <div class="loading-container" *ngIf="!initialDataLoaded">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p class="ion-margin-top">Cami bilgileri yükleniyor...</p>
   </div>
+
+
+
+  <!-- 4. Cami detayları bulunamadı -->
+
   <div class="mosque-info ion-padding" *ngIf="initialDataLoaded && mosqueDetails.length === 0 && mosqueId">
       <p class="ion-text-center">Cami detayları bulunamadı (ID: {{mosqueId}}).</p>
   </div>

@@ -93,7 +93,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
             this.mosqueId = storedId;
             this.loadMosqueData(Number(storedId));
           } else {
-            this.toastService.showToast('Cami ID bulunamadı. Lütfen tekrar deneyin.');
+            this.toastService.showToastWarning('Cami ID bulunamadı. Lütfen tekrar deneyin.');
             this.initialDataLoaded = true;
           }
         });
@@ -130,7 +130,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
 
   loadMosqueData(id: number) {
     if (!id) {
-      this.toastService.showToast('Geçersiz Cami ID.');
+      this.toastService.showToastWarning('Geçersiz Cami ID.');
       this.initialDataLoaded = true;
       return;
     }
@@ -146,6 +146,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
       next: (response) => {
         if (response.success && response.data) {
           this.mosqueDetails = response.data;
+           this.initialDataLoaded = true;
           if (this.mosqueDetails.length > 0) {
             // Görevli listesi varsa, ilk görevliyi varsayılan olarak seçili yap
             this.selectedStaffMember = this.mosqueDetails[0]; 
@@ -153,7 +154,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
             this.selectedStaffMember = null; // Görevli yoksa seçimi temizle
           }
         } else {
-          this.toastService.showToast(response.message || 'Cami detayları alınamadı.');
+          this.toastService.showToastWarning(response.message || 'Cami detayları alınamadı.');
           this.mosqueDetails = [];
           this.selectedStaffMember = null;
         }
@@ -235,7 +236,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
   }
 
   async refresh() {
-    this.toastService.showToast('Veriler yenileniyor...');
+    this.toastService.showToastInfo('Veriler yenileniyor...');
     this.initialDataLoaded = false;
     this.dataLoadStatus.detailsLoaded = false; // Reset status for new load
     this.dataLoadStatus.imagesLoaded = false;  // Reset status for new load
@@ -245,7 +246,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
       this.mosqueId = id;
       this.loadMosqueData(Number(id));
     } else {
-      this.toastService.showToast('Yenilemek için Cami ID bulunamadı.');
+      this.toastService.showToastWarning('Yenilemek için Cami ID bulunamadı.');
       this.initialDataLoaded = true;
     }
   }

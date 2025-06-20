@@ -31,12 +31,25 @@
     <ion-button (click)="scan()">Barkod Tara</ion-button>
   </ion-content> -->
 
-  <ion-content [fullscreen]="true">
+  <!-- <ion-content [fullscreen]="true">
     <div class="loading-container" *ngIf="scanning" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
       <ion-spinner name="circular"></ion-spinner>
       <p style="margin-top: 10px;">Tarama Başlıyor...</p>
     </div>
 
 
-
   </ion-content>
+ -->
+
+ <ion-content [fullscreen]="true">
+  <div class="loading-container" *ngIf="scanning" style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+    <ion-spinner name="circular"></ion-spinner>
+    <p style="margin-top: 10px;">Tarama Başlıyor...</p>
+  </div>
+
+  <div *ngIf="!scanning" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+    <ion-button (click)="scan()" >Tarama başarısız olduysa yeniden deneyin!</ion-button>
+  </div>
+</ion-content>
+
+<!-- burada scan yerine ilke önce / e 2 sn sorna qr a yöneldirebilrsin -->

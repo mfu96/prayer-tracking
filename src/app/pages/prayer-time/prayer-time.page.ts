@@ -79,7 +79,7 @@ ionViewWillEnter() {
 getPrayerUserDetail(){
   this.prayerService.getPrayerByUserDetail().subscribe((response) => {
     this.prayerDetails=response.data
-    this.toastService.showToast(response.message)
+    this.toastService.showToastSuccess(response.message)
     console.log(response.message)
     console.log(response)
     this.updatePrayerGroups();
@@ -92,7 +92,7 @@ getPrayerUserDetail(){
   getPrayerDetails() {
     this.prayerService.getPrayerDetails().subscribe((response) => {
       this.prayerDetails = response.data;
-      this.toastService.showToast(response.message+ "Vakitler Listelendi")
+      this.toastService.showToastSuccess(response.message+ "Vakitler Listelendi")
       console.log(response)
       this.updatePrayerGroups();
     });
@@ -223,7 +223,16 @@ getPrayerUserDetail(){
       this.router.navigate(['/qr']); // Konum açıksa QR sayfasına gider
       console.log('Konum servisi açık. QR tarayıcıya yönlendiriliyor...');
     } else {
-      this.toastService.showToast('Konum servisi kapalı. Lütfen açın.'); // Kapalıysa uyarı gösterir
+      this.toastService.showToastWarning('Konum servisi kapalı. Lütfen açın.'); // Kapalıysa uyarı gösterir
+
+
+      // Özel konum ve butonla kullanım
+// this.toastService.showToast('Merhaba', {
+//   duration: 3000,
+//   position: 'top',
+//   buttons: [{ text: 'Tamam' }],
+//   cssClass: 'special-toast'
+// });
     }
   }
 }

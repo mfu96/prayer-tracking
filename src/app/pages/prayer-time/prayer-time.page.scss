@@ -16,7 +16,8 @@ ion-fab-button {
     "öğle": #fed035,
     "ikindi": #fd8b2d,
     "akşam": #fe4c52,
-    "yatsı": #ac282b
+    "yatsı": #ac282b,
+    "diğer": #336093
   );
   
   @each $prayer, $color in $prayerColors {
@@ -53,4 +54,6 @@ ion-fab-button {
   .ion-text-center {
     justify-content: center;
   }
+
+  
   
