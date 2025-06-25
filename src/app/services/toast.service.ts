@@ -14,6 +14,8 @@ export class ToastService {
       message, // Gösterilecek mesaj
       duration:options.duration || 2000, // Gösterim süresi (varsayılan 2 saniye)
        position: options.position || 'bottom', // 'top', 'middle' veya 'bottom'
+             positionAnchor: options.positionAnchor || 'main-tab-bar',  //Toastın tabs daki ikonları ezmesini engeller
+
 
           buttons: options.buttons || [{
       text: '✕', // Daha minimalist kapatma butonu
@@ -32,6 +34,8 @@ export class ToastService {
       message, // Gösterilecek mesaj
       duration:options.duration || 3000, // Gösterim süresi (varsayılan 2 saniye)
        position: options.position || 'bottom', // 'top', 'middle' veya 'bottom'
+                    positionAnchor: options.positionAnchor || 'main-tab-bar',  //Toastın tabs daki ikonları ezmesini engeller
+
 
           buttons: options.buttons || [{
       text: '✕', // Daha minimalist kapatma butonu
@@ -50,6 +54,8 @@ export class ToastService {
       message, // Gösterilecek mesaj
       duration:options.duration || 2000, // Gösterim süresi (varsayılan 2 saniye)
        position: options.position || 'bottom', // 'top', 'middle' veya 'bottom'
+      positionAnchor: options.positionAnchor || 'main-tab-bar',  //Toastın tabs daki ikonları ezmesini engeller
+
 
           buttons: options.buttons || [{
       text: '✕', // Daha minimalist kapatma butonu

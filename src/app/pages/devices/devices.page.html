@@ -13,7 +13,12 @@
 </ion-header>
 
 <ion-content fullscreen="true">
-  <ion-list>
+
+    <div *ngIf="!isExistDevice" class="no-device-message">
+    <p>Cihaz bulunamadı</p>
+  </div>
+
+  <ion-list  *ngIf="isExistDevice">
     <ion-item-group *ngFor="let group of deviceGroups">
       <ion-item-divider sticky>
         <ion-label>{{ group.date }}</ion-label>

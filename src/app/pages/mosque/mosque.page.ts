@@ -34,6 +34,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
   
   selectedStaffMember: MosqueDetailDto | null = null; // Seçili görevliyi tutacak değişken
   compareStaffMembers:any
+  
 
   // Swiper ayarları doğrudan HTML'e taşınabilir veya burada tutulup HTML'de bind edilebilir.
   // Swiper'ın web component'leri için parametreler kebab-case olarak HTML'de verilir.

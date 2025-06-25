@@ -79,7 +79,7 @@ ionViewWillEnter() {
 getPrayerUserDetail(){
   this.prayerService.getPrayerByUserDetail().subscribe((response) => {
     this.prayerDetails=response.data
-    this.toastService.showToastSuccess(response.message)
+    this.toastService.showToastInfo(response.message)
     console.log(response.message)
     console.log(response)
     this.updatePrayerGroups();
@@ -92,7 +92,7 @@ getPrayerUserDetail(){
   getPrayerDetails() {
     this.prayerService.getPrayerDetails().subscribe((response) => {
       this.prayerDetails = response.data;
-      this.toastService.showToastSuccess(response.message+ "Vakitler Listelendi")
+      this.toastService.showToastInfo(response.message+ "Vakitler Listelendi")
       console.log(response)
       this.updatePrayerGroups();
     });

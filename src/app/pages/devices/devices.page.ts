@@ -15,6 +15,8 @@ export class DevicesPage implements OnInit {
   deviceGroups: any[] = [];
   currentDeviceUniqId: string = '';
 
+  isExistDevice=false
+
   constructor(
     private deviceService: DeviceService,
     private deviceInfoService: DeviceInformationService,
@@ -45,6 +47,9 @@ export class DevicesPage implements OnInit {
       this.devices = response.data.sort((a, b) =>
         new Date(b.registrationDate).getTime() - new Date(a.registrationDate).getTime()
       );
+
+          // Cihazların olup olmadığını kontrol et
+    this.isExistDevice = this.devices && this.devices.length > 0;
 
       console.log('Cihazlar:', this.devices);
       this.updateDeviceGroups();
@@ -140,7 +145,7 @@ export class DevicesPage implements OnInit {
       // Ek güvenlik kontrolü: Eğer cihazın status değeri true ise,
       // herhangi bir silme işlemi gerçekleştirmiyoruz.
       if (device.status) {
-        this.toastService.showToastWarning('Aktif cihazı silmek için bağlı bulunduğunuz Müftülüğe başvurun.');
+        this.toastService.showToastWarning('Aktif cihazı silmek için bağlı bulunduğunuz birime başvurunuz.');
         return;
       }
       console.log('Silinen cihaz:', device.deviceId);
