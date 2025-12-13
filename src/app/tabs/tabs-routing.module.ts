@@ -18,6 +18,10 @@ const routes: Routes = [
         path: 'mosque',
         loadChildren: () => import('../pages/mosque/mosque.module').then( m => m.MosquePageModule)
       },
+         {
+        path: 'daily-board',
+        loadChildren: () => import('../pages/daily-board/daily-board.module').then( m => m.DailyBoardPageModule)
+      },
       {
         path: 'tab1',
         loadChildren: () => import('../tab1/tab1.module').then(m => m.Tab1PageModule)

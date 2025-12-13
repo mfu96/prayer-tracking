@@ -186,14 +186,14 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
       if (this.locationSubscription) {
         this.locationSubscription.unsubscribe(); // Aboneliği iptal et
       }
-      this.router.navigate(['/tabs/prayer-time']); // Yönlendirme yap
+      this.router.navigate(['/tabs/daily-board']); // Yönlendirme yap
     },
 
       (error) => { // Hata varsa
         console.error('Namaz vakti eklenirken hata oluştu:',    error.error.message); // Konsola yazar
         this.toastService.showToastWarning( 'Namaz vakti eklenirken hata oluştu: ' + error.error.message); // Kullanıcıya uyarı
         this.loadingService.hideLoading(); // Hata durumunda da gizle
-         this.router.navigate(['/tabs/prayer-time']); // Yönlendirme yap
+         this.router.navigate(['/tabs/daily-board']); // Yönlendirme yap
 
       }
     );

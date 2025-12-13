@@ -3,20 +3,21 @@
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    <ion-title>Account</ion-title>
+    <ion-title>Hesabım</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <div *ngIf="fullName" class="ion-padding-top ion-text-center">
-    <img src="https://www.gravatar.com/avatar?d=mm&s=140"
+    <img 
+        [src]="userAvatarUrl"
          width="140"
          height="140"
          alt="User avatar"
          class="user-avatar" />
     <h2>{{ fullName }}</h2>
     <ion-list inset>
-      <ion-item (click)="updatePicture()">Update Picture</ion-item>
+      <!-- <ion-item (click)="updatePicture()">Update Picture</ion-item> -->
       <ion-item (click)="devices()">Cihazlarım</ion-item>
             <!-- <ion-item (click)="changePassword()">Change Password</ion-item> -->
 

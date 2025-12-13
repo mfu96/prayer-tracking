@@ -7,6 +7,7 @@ import { Storage } from '@ionic/storage-angular';
 import { UserData } from './providers/user-data';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { ToastService } from './services/toast.service';
 
 
 @Component({
@@ -19,12 +20,12 @@ export class AppComponent implements OnInit{
 
 
   public appPages = [
-    { title: 'Prayer Time', url: '/tabs/prayer-time', icon: 'assets/icon/prayer-time.svg', type:'svg' },
-    { title: 'Mosque', url: '/tabs/mosque', icon: 'assets/icon/mosque.svg', type:'svg' },
-    { title: 'Tab 3', url: '/tabs/tab3', icon: 'square' },
-    { title: 'Prayer', url: '/tabs/prayer', icon: 'square' },
-    { title: 'Mosque', url: '/tabs/mosque', icon: 'ellipse' },
-    { title: 'Employee', url: '/tabs/employees', icon: 'ellipse' },
+    { title: 'Namaz Vakitlerim', url: '/tabs/prayer-time', icon: 'assets/icon/prayer-time.svg', type:'svg' },
+    { title: 'Camii', url: '/tabs/mosque', icon: 'assets/icon/mosque.svg', type:'svg' },
+    { title: 'Pano', url: '/tabs/daily-board', icon: 'clipboard' },
+    // { title: 'Prayer', url: '/tabs/prayer', icon: 'square' },
+    // { title: 'Mosque', url: '/tabs/mosque', icon: 'ellipse' },
+    // { title: 'Employee', url: '/tabs/employees', icon: 'ellipse' },
 
   ];
 
@@ -41,6 +42,7 @@ export class AppComponent implements OnInit{
     private router: Router,
     private menu: MenuController,
     private authService: AuthService,
+    private toastService: ToastService
 
 
   ) {
@@ -128,7 +130,9 @@ export class AppComponent implements OnInit{
   logout() {
 
     this.authService.logout().then(() => {
-      return this.router.navigate(['/tabs/mosque']);
+            this.toastService.showToastSuccess('Çıkış başarılı!');
+
+      return this.router.navigate(['/tabs/daily-board']);
     });
   }
 

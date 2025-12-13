@@ -1,0 +1,97 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+        <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      Günün Panosu
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Günün Panosu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <!-- Yükleniyor göstergesi -->
+  <div *ngIf="isLoading" class="ion-text-center ion-padding">
+    <ion-spinner name="crescent"></ion-spinner>
+    <p>Yükleniyor...</p>
+  </div>
+
+  <!-- Hata mesajı -->
+  <div *ngIf="errorMessage" class="ion-padding">
+      <ion-text color="danger">
+          <p>{{ errorMessage }}</p>
+      </ion-text>
+  </div>
+
+  <!-- Veri yüklendiğinde gösterilecek içerik -->
+  <div *ngIf="dailyBoard && !isLoading">
+
+    <!-- Günün Ayeti Kartı -->
+    <ion-card class="daily-card">
+      <ion-card-header>
+        <ion-card-title>Günün Ayeti</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="quote-text">"{{ dailyBoard.verse }}"</p>
+        <ion-grid class="ion-no-padding ion-margin-top">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="auto">
+              <div class="date-badge">{{ formattedDate }}</div>
+            </ion-col>
+            <ion-col class="source-text">
+              <span>{{ dailyBoard.verseSource }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <hr class="separator">
+
+    <!-- Günün Hadisi Kartı -->
+    <ion-card class="daily-card">
+      <ion-card-header>
+        <ion-card-title>Günün Hadisi</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="quote-text">"{{ dailyBoard.hadith }}"</p>
+        <ion-grid class="ion-no-padding ion-margin-top">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="auto">
+              <div class="date-badge">{{ formattedDate }}</div>
+            </ion-col>
+            <ion-col class="source-text">
+              <span>{{ dailyBoard.hadithSource }}</span>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+    <hr class="separator">
+
+    <!-- Günün Duası Kartı -->
+    <ion-card class="daily-card">
+      <ion-card-header>
+        <ion-card-title>Günün Duası</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p class="quote-text">"{{ dailyBoard.petition }}"</p>
+        <ion-grid class="ion-no-padding ion-margin-top">
+          <ion-row class="ion-align-items-center">
+            <ion-col size="auto">
+              <div class="date-badge">{{ formattedDate }}</div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-card-content>
+    </ion-card>
+
+  </div>
+</ion-content>

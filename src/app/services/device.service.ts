@@ -22,9 +22,15 @@ export class DeviceService {
   }
 
   getEmployeeDevices(): Observable<ListResponseModel<Device>> {
-    let newPath = this.apiUrl + 'devices/getbyemployee';
+    let newPath = this.apiUrl + 'devices/getbyemployeedevices';
     return this.httpClient.get<ListResponseModel<Device>>(newPath);
   }
+
+  getActiveEmployeeDevice(): Observable<SingleResponseModel<Device>> {
+  // Controller'da tanımladığımız yeni yola istek atıyoruz.
+  let newPath = this.apiUrl + 'devices/getbyemployeetruedevice';
+  return this.httpClient.get<SingleResponseModel<Device>>(newPath);
+}
 
   deleteDevice(deviceId: number): Observable<SingleResponseModel<Device>> {
     return this.httpClient.post<SingleResponseModel<Device>>(

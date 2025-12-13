@@ -83,8 +83,7 @@ async scan() {
     }
   }
 
- 
-
+  
   processScannedData(scannedData: string) {
     const dataParts = scannedData.split(',');
     if (dataParts.length < 4) {
@@ -108,25 +107,27 @@ async scan() {
  });
 
     // Device id bilgisini cihaz servisten alıyoruz.
-  this.deviceService.getEmployeeDevices().subscribe(
+  this.deviceService.getActiveEmployeeDevice().subscribe(
     response => {
-      if (response && response.data && response.data.length > 0) {
-        // Cihaz listesinin ilk elemanını kullanıyoruz. (Modelinize göre "id" veya "deviceId" olabilir)
-        const device = response.data[0];
-        const deviceId =  device.deviceId; 
+      if (response && response.success && response.data) {
+
+   // Aktif cihazın ID'sini doğrudan yanıttan alıyoruz.
+        const deviceId = response.data.deviceId;
 
         const prayerData = {
           prayerName: '',
           mosqueId: mosqueId,
           companyId: companyId,
-          deviceId: deviceId
+          deviceId: deviceId // Buraya aktif cihazın ID'si atanıyor.
         };
 
-        // Cihaz bilgisini aldıktan sonra yönlendirme işlemini gerçekleştirin.
         this.router.navigate(['/prayer-add'], { state: { prayerData } });
+
       } else {
-        console.log('Çalışana ait cihaz bulunamadı');
-        // İsteğe bağlı: Hata durumunda bir default değer atayabilir veya kullanıcıya uyarı verebilirsiniz.
+        // Backend'den "aktif cihaz bulunamadı" gibi bir hata mesajı geldiyse...
+        console.error('İşlem başarısız:', response.message);
+        // Kullanıcıya bir hata mesajı gösterebilirsiniz.
+        // this.toastService.showError(response.message || 'Aktif cihaz bulunamadı.');
       }
     },
     error => {
@@ -135,4 +136,75 @@ async scan() {
     }
   );
 }
+
+ 
+//burada sorun yok sadece dah ahızlı olması için tüm cihazlr yerine sadeceaktif cihazı alıcak şekilde değiştireceğiz
+
+
+//   processScannedData(scannedData: string) {
+//     const dataParts = scannedData.split(',');
+//     if (dataParts.length < 4) {
+//       console.log('Geçersiz QR kodu');
+//       return;
+//     }
+//     const qrId = parseInt(dataParts[0], 10);
+//     const mosqueId = parseInt(dataParts[1], 10);
+//     const companyId = parseInt(dataParts[2], 10);
+//     const generatedDate = dataParts[3];
+//     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
+
+
+//  // Storage'e mosqueId bilgisini kaydediyoruz (indeks notasyonu ile).
+//  this.storage['set']('mosqueId', mosqueId)
+//  .then(() => {
+//    console.log('Mosque ID storage\'a kaydedildi:', mosqueId);
+//  })
+//  .catch((error: any) => {
+//    console.error('Mosque ID storage\'a kayıt hatası:', error);
+//  });
+
+//     // Device id bilgisini cihaz servisten alıyoruz.
+//   this.deviceService.getEmployeeDevices().subscribe(
+//     response => {
+//       if (response && response.data && response.data.length > 0) {
+
+//                 const activeDevice = response.data.find(device => device.status === true);
+
+
+//         // Cihaz listesinin ilk elemanını kullanıyoruz. (Modelinize göre "id" veya "deviceId" olabilir)
+//         //const device = response.data[0];
+//         if (activeDevice) {
+//                   const deviceId =  activeDevice.deviceId; 
+
+
+//         const prayerData = {
+//           prayerName: '',
+//           mosqueId: mosqueId,
+//           companyId: companyId,
+//           deviceId: deviceId
+//         };
+
+//         // Cihaz bilgisini aldıktan sonra yönlendirme işlemini gerçekleştirin.
+//         this.router.navigate(['/prayer-add'], { state: { prayerData } });
+
+//         }
+
+//         else{
+//           this.toastService.showToastWarning('Çalışana ait AKTİF bir cihaz bulunamadı. İşlem yapılamaz.')
+//         }
+
+
+//       } 
+      
+//       else {
+//         console.log('Çalışana ait cihaz bulunamadı');
+//         // İsteğe bağlı: Hata durumunda bir default değer atayabilir veya kullanıcıya uyarı verebilirsiniz.
+//       }
+//     },
+//     error => {
+//       console.error('Cihaz bilgileri alınırken hata oluştu:', error);
+//       // Gerekirse kullanıcıya hata mesajı gösterebilir veya alternatif bir işlem uygulayabilirsiniz.
+//     }
+//   );
+// }
 }

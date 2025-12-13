@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">prayer-tracking</string>
-    <string name="title_activity_main">prayer-tracking</string>
-    <string name="package_name">com.mfu.prayertracking</string>
-    <string name="custom_url_scheme">com.mfu.prayertracking</string>
+    <string name="app_name">e-Mesai</string>
+    <string name="title_activity_main">e-Mesai</string>
+    <string name="package_name">com.mfunet.eMesai</string>
+    <string name="custom_url_scheme">com.mfunet.eMesai</string>
 </resources>
