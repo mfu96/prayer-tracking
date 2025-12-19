@@ -8,6 +8,7 @@ import { DeviceInformationService } from 'src/app/services/device-information.se
 import { DeviceService } from 'src/app/services/device.service';
 import { ToastService } from 'src/app/services/toast.service';
 import { Storage } from '@ionic/storage-angular';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-qr',
@@ -24,7 +25,8 @@ export class QrComponent implements OnInit, OnDestroy {
     private platform: Platform,
     private deviceService: DeviceService,
     private toastService: ToastService,
-    private storage: Storage
+    private storage: Storage,
+    private deviceInfoService: DeviceInformationService 
   ) {}
 
   async ngOnInit() {
@@ -73,21 +75,25 @@ async scan() {
       if (barcodes.length > 0) {
         const scannedData = barcodes[0].rawValue;
         console.log('Taranan barkod içeriği:', scannedData);
-        this.processScannedData(scannedData);
+       await this.processScannedData(scannedData);
       }
     } catch (error) {
+    
       console.error('Tarama hatası:', error);
     } finally {
+      // İşlem bittiğinde veya hata aldığında tarama modundan çık
       document.body.classList.remove('barcode-scanner-active');
       this.scanning = false;
     }
   }
 
   
-  processScannedData(scannedData: string) {
+ async processScannedData(scannedData: string) {
     const dataParts = scannedData.split(',');
     if (dataParts.length < 4) {
       console.log('Geçersiz QR kodu');
+      this.toastService.showToastWarning('Geçersiz QR kodu tarandı.');
+
       return;
     }
     const qrId = parseInt(dataParts[0], 10);
@@ -97,45 +103,68 @@ async scan() {
     console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
 
 
- // Storage'e mosqueId bilgisini kaydediyoruz (indeks notasyonu ile).
- this.storage['set']('mosqueId', mosqueId)
- .then(() => {
-   console.log('Mosque ID storage\'a kaydedildi:', mosqueId);
- })
- .catch((error: any) => {
-   console.error('Mosque ID storage\'a kayıt hatası:', error);
- });
+ // Storage'e mosqueId bilgisini kaydediyoruz
+try {
+        await this.storage.set('mosqueId', mosqueId);
+        console.log('Mosque ID kaydedildi');
+    } catch (e) {
+        console.error('Storage hatası', e);
+    }
+
 
     // Device id bilgisini cihaz servisten alıyoruz.
-  this.deviceService.getActiveEmployeeDevice().subscribe(
-    response => {
+
+    try {
+      // ADIM 1: Fiziksel Cihazın UniqID'sini al
+      const physicalDevice = await this.deviceInfoService.gatherRealDeviceInfo();
+      const myUniqId = physicalDevice.deviceUniqId;
+
+      // ADIM 2: Backend'den kullanıcının aktif cihaz LİSTESİNİ çek
+      // NOT: 'subscribe' yerine 'firstValueFrom' kullanarak cevabı bekliyoruz.
+      // Böylece kod aşağıya doğru akıyor, callback cehennemi olmuyor.
+      const response = await firstValueFrom(this.deviceService.getActiveEmployeeDevice());
+
       if (response && response.success && response.data) {
+        
+        // Backend'den gelen liste
+        const activeDevicesList = response.data; // Artık burası List<Device>
 
-   // Aktif cihazın ID'sini doğrudan yanıttan alıyoruz.
-        const deviceId = response.data.deviceId;
+        // ADIM 3: Eşleştirme Yap
+        const matchedDevice = activeDevicesList.find((d: any) => d.deviceUniqId === myUniqId);
 
-        const prayerData = {
-          prayerName: '',
-          mosqueId: mosqueId,
-          companyId: companyId,
-          deviceId: deviceId // Buraya aktif cihazın ID'si atanıyor.
-        };
+        if (matchedDevice) {
+            console.log("Cihaz doğrulandı! ID:", matchedDevice.deviceId);
+            
+            const prayerData = {
+                prayerName: '',
+                mosqueId: mosqueId,
+                companyId: companyId,
+                deviceId: matchedDevice.deviceId // Doğru DB ID'si
+            };
 
-        this.router.navigate(['/prayer-add'], { state: { prayerData } });
+            // Yönlendirme
+            this.router.navigate(['/prayer-add'], { state: { prayerData } });
+
+        } else {
+            // Cihaz listede yoksa
+            console.error("Bu cihaz sistemde aktif değil!");
+            this.toastService.showToastWarning("Bu cihaz sistemde tanımlı/aktif değil.");
+            this.router.navigate(['/']);
+        }
 
       } else {
-        // Backend'den "aktif cihaz bulunamadı" gibi bir hata mesajı geldiyse...
-        console.error('İşlem başarısız:', response.message);
-        // Kullanıcıya bir hata mesajı gösterebilirsiniz.
-        // this.toastService.showError(response.message || 'Aktif cihaz bulunamadı.');
+          console.error("Aktif cihaz listesi alınamadı.");
+          this.toastService.showToastWarning("Sistemde aktif cihazınız bulunamadı.");
+          this.router.navigate(['/']);
       }
-    },
-    error => {
-      console.error('Cihaz bilgileri alınırken hata oluştu:', error);
-      // Gerekirse kullanıcıya hata mesajı gösterebilir veya alternatif bir işlem uygulayabilirsiniz.
+
+    } catch (error) {
+      console.error('Cihaz doğrulama sürecinde hata:', error);
+      this.toastService.showToastWarning("Cihaz doğrulama hatası.");
+      this.router.navigate(['/']);
     }
-  );
-}
+  }
+
 
  
 //burada sorun yok sadece dah ahızlı olması için tüm cihazlr yerine sadeceaktif cihazı alıcak şekilde değiştireceğiz
