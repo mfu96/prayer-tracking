@@ -10,6 +10,7 @@ import { AuthService } from './services/auth.service';
 import { ToastService } from './services/toast.service';
 
 
+
 @Component({
   selector: 'app-root',
   templateUrl: 'app.component.html',
@@ -18,10 +19,15 @@ import { ToastService } from './services/toast.service';
 })
 export class AppComponent implements OnInit{
 
+  
 
   public appPages = [
-    { title: 'Namaz Vakitlerim', url: '/tabs/prayer-time', icon: 'assets/icon/prayer-time.svg', type:'svg' },
-    { title: 'Camii', url: '/tabs/mosque', icon: 'assets/icon/mosque.svg', type:'svg' },
+    { title: 'Hareketlerim', url: '/tabs/prayer-time', icon: 'time-sharp'},
+        // { title: 'Hareketlerim', url: '/tabs/prayer-time', icon: 'assets/icon/prayer-time.svg', type:'svg' },
+
+    //{ title: 'Camii', url: '/tabs/mosque', icon: 'assets/icon/mosque.svg', type:'svg' },
+       { title: 'Konumum', url: '/tabs/mosque', icon: 'location-sharp' ,type:'ionic || svg'},
+
     { title: 'Pano', url: '/tabs/daily-board', icon: 'clipboard' },
     // { title: 'Prayer', url: '/tabs/prayer', icon: 'square' },
     // { title: 'Mosque', url: '/tabs/mosque', icon: 'ellipse' },

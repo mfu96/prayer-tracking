@@ -11,13 +11,13 @@ import { Image } from '../interfaces/entities/Image';
 export class ImageService {
 
 baseUrl= environment.baseUrl;
-  apiUrl= environment.apiUrl + 'images/';
+  apiUrl= environment.apiUrl + 'images';
 
 
   constructor(private httpClient:HttpClient) { }
 
   getImageByMosqueId(mosqueId: number):Observable<ListResponseModel<Image>>{
-    let newPath=this.apiUrl + "getimagesbymosque?mosqueId=" +mosqueId;
+    let newPath=this.apiUrl + "/getimagesbymosque?mosqueId=" +mosqueId;
     return this.httpClient.get<ListResponseModel<Image>>(newPath);
   }
 

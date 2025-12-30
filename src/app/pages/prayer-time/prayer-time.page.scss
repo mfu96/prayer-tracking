@@ -17,7 +17,9 @@ ion-fab-button {
     "ikindi": #fd8b2d,
     "akşam": #fe4c52,
     "yatsı": #ac282b,
-    "diğer": #336093
+    "diğer": #336093,
+    "giriş": #00bcd4, // Yeni - Turkuaz
+  "çıkış": #78909c  // Yeni - Gri
   );
   
   @each $prayer, $color in $prayerColors {

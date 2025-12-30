@@ -94,7 +94,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
             this.mosqueId = storedId;
             this.loadMosqueData(Number(storedId));
           } else {
-            this.toastService.showToastWarning('Cami ID bulunamadı. Lütfen tekrar deneyin.');
+            this.toastService.showToastWarning('Konum ID bulunamadı. Lütfen tekrar deneyin.');
             this.initialDataLoaded = true;
           }
         });
@@ -131,7 +131,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
 
   loadMosqueData(id: number) {
     if (!id) {
-      this.toastService.showToastWarning('Geçersiz Cami ID.');
+      this.toastService.showToastWarning('Geçersiz Konum ID.');
       this.initialDataLoaded = true;
       return;
     }
@@ -247,7 +247,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
       this.mosqueId = id;
       this.loadMosqueData(Number(id));
     } else {
-      this.toastService.showToastWarning('Yenilemek için Cami ID bulunamadı.');
+      this.toastService.showToastWarning('Yenilemek için Konum ID bulunamadı.');
       this.initialDataLoaded = true;
     }
   }

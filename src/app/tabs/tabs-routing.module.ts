@@ -12,11 +12,12 @@ const routes: Routes = [
       {
         path: 'prayer-time',
         loadChildren: () => import('../pages/prayer-time/prayer-time.module').then( m => m.PrayerTimePageModule),
-        // canActivate:[LoginGuard]
+        canActivate:[LoginGuard]
       },
       {
         path: 'mosque',
-        loadChildren: () => import('../pages/mosque/mosque.module').then( m => m.MosquePageModule)
+        loadChildren: () => import('../pages/mosque/mosque.module').then( m => m.MosquePageModule),
+        canActivate:[LoginGuard]
       },
          {
         path: 'daily-board',
@@ -44,20 +45,21 @@ const routes: Routes = [
       },
           {
         path:'qr',
-        loadChildren: () => import('../components/qr/qr.component').then( m => m.QrComponent)
+        loadChildren: () => import('../components/qr/qr.component').then( m => m.QrComponent),
+        canActivate:[LoginGuard]
       },
   
 
       {
         path: '',
-        redirectTo: '/tabs/prayer-time',
+        redirectTo: '/tabs/daily-board',
         pathMatch: 'full'
       }
     ]
   },
   {
     path: '',
-    redirectTo: '/tabs/prayer-time',
+    redirectTo: '/tabs/daily-board',
     pathMatch: 'full'
   }
 ];

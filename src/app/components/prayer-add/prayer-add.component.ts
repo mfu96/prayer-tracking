@@ -90,7 +90,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
 
   // Namaz vaktini seçme alert'ini açar
   async selectPrayerName() {
-    const prayerNames = ['Sabah', 'Öğle', 'İkindi', 'Akşam', 'Yatsı', 'Diğer']; // Namaz seçenekleri
+    const prayerNames = ['Giriş','Çıkış', 'Öğle', 'ikindi', 'Akşam', 'Yatsı', 'Diğer']; // Namaz seçenekleri
     const alert = document.createElement('ion-alert'); // Yeni bir alert oluşturur
     this.alertInstance = alert; // Alert örneğini kaydeder
     alert.header = 'Lütfen Namaz Vaktini Seçiniz'; // Alert başlığı
@@ -120,7 +120,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
         handler: (data) => { // Butona basıldığında
           if (!this.canSubmit) { // Doğruluk yeterli değilse
             this.toastService.showToastWarning(
-              `Konum doğruluğunuz ${this.currentAccuracy} mt. Vaktin eklenebilmesi için en az 50 mt olmalı.`
+              `Konum doğruluğunuz ${this.currentAccuracy} mt. Hareketim eklenebilmesi için en az 50 mt olmalı.`
             );
             return false; // Alert kapanmaz
           }
@@ -179,7 +179,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
     // Namaz vaktini servise gönderir
     this.prayerService.addPrayerTime(this.prayerData).subscribe(
       (response) => { // Başarılıysa
-        console.log('Vakit eklendi:', response); // Konsola yazar
+        console.log('Hareket eklendi:', response); // Konsola yazar
         this.toastService.showToastSuccess(response.message); // Kullanıcıya mesaj gösterir
         this.loadingService.hideLoading(); // Loading'i gizle
       this.locationService.stopTracking(); // Konum izlemeyi durdur

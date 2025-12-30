@@ -11,16 +11,18 @@ const routes: Routes = [
   },
   {
     path: 'prayer-time',
-    loadChildren: () => import('./pages/prayer-time/prayer-time.module').then( m => m.PrayerTimePageModule)
+    loadChildren: () => import('./pages/prayer-time/prayer-time.module').then( m => m.PrayerTimePageModule),
+    canActivate:[LoginGuard]
   },
   {
     path: 'mosque',
-    loadChildren: () => import('./pages/mosque/mosque.module').then( m => m.MosquePageModule)
+    loadChildren: () => import('./pages/mosque/mosque.module').then( m => m.MosquePageModule),
+    canActivate:[LoginGuard]
   },
   {
     path: 'qr',
     component: QrComponent,
-     //canActivate:[LoginGuard]
+     canActivate:[LoginGuard]
   },
   {
     path: 'prayer-add',

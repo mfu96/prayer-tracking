@@ -33,7 +33,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 
       AppRoutingModule, 
       ServiceWorkerModule.register('ngsw-worker.js', {
-        enabled: environment.production
+        // enabled: environment.production  291225 tarihinde kapatıldı
+        enabled: false,
       }),
       QrComponent
 

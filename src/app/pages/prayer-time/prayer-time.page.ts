@@ -92,7 +92,7 @@ getPrayerUserDetail(){
   getPrayerDetails() {
     this.prayerService.getPrayerDetails().subscribe((response) => {
       this.prayerDetails = response.data;
-      this.toastService.showToastInfo(response.message+ "Vakitler Listelendi")
+      this.toastService.showToastInfo(response.message+ "Hareketler Listelendi")
       console.log(response)
       this.updatePrayerGroups();
     });
