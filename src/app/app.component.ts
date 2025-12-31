@@ -8,6 +8,10 @@ import { UserData } from './providers/user-data';
 import { Router } from '@angular/router';
 import { AuthService } from './services/auth.service';
 import { ToastService } from './services/toast.service';
+// YENİ: package.json dosyasını direkt içeri aktarıyoruz
+// Not: Bu satırın çalışması için tsconfig.json içinde "resolveJsonModule": true olmalıdır.
+import packageInfo from '../../package.json';
+import { CapacitorUpdater } from '@capgo/capacitor-updater';
 
 
 
@@ -18,6 +22,9 @@ import { ToastService } from './services/toast.service';
   standalone: false,
 })
 export class AppComponent implements OnInit{
+
+    public appVersion: string = packageInfo.version; 
+
 
   
 
@@ -80,6 +87,16 @@ export class AppComponent implements OnInit{
         .then(() => window.location.reload());
     });
     
+
+   // --- CAPGO İÇİN EN ÖNEMLİ KISIM ---
+    // Uygulama tamamen yüklendikten (ngOnInit) sonra burası çalışır.
+    try {
+      await CapacitorUpdater.notifyAppReady();
+      console.log('Capgo: Uygulama başarıyla başlatıldı ve doğrulandı.');
+    } catch (e) {
+      // Web'de çalışırken hata vermemesi veya native plugin yüklü değilse
+      console.log('Capacitor Updater notify hatası (Web ortamı olabilir):', e);
+    }
   }
 
   initializeApp() {

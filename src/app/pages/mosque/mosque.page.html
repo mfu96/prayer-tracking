@@ -37,7 +37,7 @@
     </swiper-container>
 
         <div *ngIf="mosqueImages.length === 0 && initialDataLoaded && mosqueId" class="placeholder-header-content">
-      <p class="ion-text-center">Bu cami için henüz resim eklenmemiş.</p>
+      <p class="ion-text-center">Bu konum için henüz resim eklenmemiş.</p>
     </div>
 
         <div *ngIf="!initialDataLoaded && mosqueId" class="placeholder-header-content">
@@ -62,7 +62,7 @@
       <ion-item *ngIf="mosqueDetails[0].description">
         <ion-icon slot="start" name="information-circle-outline" color="primary"></ion-icon>
         <ion-label class="ion-text-wrap">
-          {{ mosqueDetails[0].description || 'Cami hakkında bilgi bulunmamaktadır.'}}
+          {{ mosqueDetails[0].description || 'Konum hakkında bilgi bulunmamaktadır.'}}
         </ion-label>
       </ion-item>
 
@@ -76,7 +76,7 @@
       <ion-item class="clickable-address" (click)="openMaps()">
         <ion-icon slot="start" name="navigate-outline" color="primary"></ion-icon>
         <ion-label>
-          Cami adresine ulaşmak için dokunun.
+          Konum adresine ulaşmak için dokunun.
         </ion-label>
           <ion-icon slot="end" name="chevron-forward-outline" color="medium"></ion-icon>
 
@@ -120,7 +120,7 @@
     </ion-list>
 
     <div *ngIf="mosqueDetails.length === 0 && initialDataLoaded" class="ion-padding ion-text-center">
-        <p>Bu cami için henüz görevli bilgisi eklenmemiş.</p>
+        <p>Bu konum için henüz görevli bilgisi eklenmemiş.</p>
     </div>
 
   </div>
@@ -128,7 +128,7 @@
      <!-- 1. Sayfa ortası spinner -->
   <div class="loading-container" *ngIf="!initialDataLoaded">
     <ion-spinner name="crescent"></ion-spinner>
-    <p class="ion-margin-top">Cami bilgileri yükleniyor...</p>
+    <p class="ion-margin-top">Konum bilgileri yükleniyor...</p>
   </div>
 
 
@@ -136,6 +136,6 @@
   <!-- 4. Cami detayları bulunamadı -->
 
   <div class="mosque-info ion-padding" *ngIf="initialDataLoaded && mosqueDetails.length === 0 && mosqueId">
-      <p class="ion-text-center">Cami detayları bulunamadı (ID: {{mosqueId}}).</p>
+      <p class="ion-text-center">Konum detayları bulunamadı (ID: {{mosqueId}}).</p>
   </div>
 </ion-content>

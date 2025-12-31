@@ -1,6 +1,6 @@
 {
   "name": "prayer-tracking",
-  "version": "0.0.1",
+  "version": "1.0.8",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
@@ -9,7 +9,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "ota": "capgo upload --no-code-check"
   },
   "private": true,
   "dependencies": {
@@ -33,6 +34,7 @@
     "@capacitor/keyboard": "7.0.0",
     "@capacitor/splash-screen": "^7.0.0",
     "@capacitor/status-bar": "7.0.0",
+    "@capgo/capacitor-updater": "^7.41.1",
     "@ionic/angular": "^8.0.0",
     "@ionic/storage-angular": "^4.0.0",
     "ionicons": "^7.0.0",
@@ -52,6 +54,7 @@
     "@angular/compiler-cli": "^19.0.0",
     "@angular/language-service": "^19.0.0",
     "@capacitor/cli": "7.0.1",
+    "@capgo/cli": "^7.63.0",
     "@ionic/angular-toolkit": "^12.0.0",
     "@types/jasmine": "~5.1.0",
     "@typescript-eslint/eslint-plugin": "^8.18.0",

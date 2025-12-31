@@ -155,7 +155,7 @@ export class MosquePage implements OnInit, OnDestroy, AfterViewInit {
             this.selectedStaffMember = null; // Görevli yoksa seçimi temizle
           }
         } else {
-          this.toastService.showToastWarning(response.message || 'Cami detayları alınamadı.');
+          this.toastService.showToastWarning(response.message || 'Konum detayları alınamadı.');
           this.mosqueDetails = [];
           this.selectedStaffMember = null;
         }

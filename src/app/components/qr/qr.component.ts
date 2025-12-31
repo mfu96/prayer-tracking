@@ -100,7 +100,7 @@ async scan() {
     const mosqueId = parseInt(dataParts[1], 10);
     const companyId = parseInt(dataParts[2], 10);
     const generatedDate = dataParts[3];
-    console.log(`QR ID: ${qrId}, Cami ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
+    console.log(`QR ID: ${qrId},  ID: ${mosqueId}, Şirket ID: ${companyId}, Oluşturma Tarihi: ${generatedDate}`);
 
 
  // Storage'e mosqueId bilgisini kaydediyoruz

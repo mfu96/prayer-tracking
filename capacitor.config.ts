@@ -5,6 +5,12 @@ const config: CapacitorConfig = {
   appName: 'e-Mesai',
   webDir: 'www'
 ,
+
+ plugins: {
+    CapacitorUpdater: {
+      autoUpdate: true, 
+    }
+  },
     android: {
        buildOptions: {
           keystorePath: 'c:\Front-End\prayer-tracking\android\app\e-Mesai.keystore',
