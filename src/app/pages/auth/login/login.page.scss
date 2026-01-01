@@ -8,6 +8,17 @@
   
   .login-logo img {
     max-width: 150px;
+
+
+    /* Tam yuvarlak olması için genişlik ve yükseklik eşit olmalı */
+  width: 150px; 
+  height: 150px;
+  
+    /* Yuvarlatma kodu */
+  border-radius: 50%; 
+
+  /* Eğer yüklediğin logo tam kare değilse, resmin bozulup basık görünmesini engeller, ortalar */
+  object-fit: cover;
   }
   
   .login-form {
