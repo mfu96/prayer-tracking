@@ -27,7 +27,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) Hareket verisini ekleyebilmek için konum bilginize ihtiyacmız var.</string>
+	<string>$(PRODUCT_NAME) Hareket verisini ekleyebilmek için anlık konum bilginize ihtiyacımız var.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
