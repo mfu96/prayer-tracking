@@ -4,11 +4,11 @@
 
 export const environment = {
   production: false,
-  apiUrl:'http://10.20.200.189:5000/api/',
-  baseUrl:'http://10.20.200.189:5000'
+  // apiUrl:'http://10.20.200.189:5000/api/',
+  // baseUrl:'http://10.20.200.189:5000'
 
-  //  apiUrl:'https://api.mfunet.com.tr/api/',
-  // baseUrl:'https://api.mfunet.com.tr'
+   apiUrl:'https://api.mfunet.com.tr/api/',
+  baseUrl:'https://api.mfunet.com.tr'
 
 };
 

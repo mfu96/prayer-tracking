@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { Storage } from '@ionic/storage-angular';
 import { LoginModel } from 'src/app/interfaces/entities/loginModel';
@@ -22,7 +22,9 @@ export class LoginPage  {
     private authService: AuthService,
     private storage: Storage,
     private router:Router,
-    private toast:ToastService
+    private toast:ToastService,
+        private route: ActivatedRoute // URL parametrelerini okumak için eklendi
+
 
   ) {
     this.initStorage();
@@ -44,6 +46,11 @@ export class LoginPage  {
 
             
             await this.authService.setUser(this.login.email);
+
+                  // Yeni 04-01-26 / 15:58
+            // URL'deki 'returnUrl' parametresini alıyoruz ama hemen gitmiyoruz.
+            const returnUrl = this.route.snapshot.queryParams['returnUrl'];
+
   
             // Yönlendirmeyi storage işlemleri bittikten sonra yapalım
             this.router.navigate(['/account']).then(() => {
@@ -53,8 +60,15 @@ export class LoginPage  {
               this.toast.showToastSuccess('Giriş başarılı! Anasayfaya yönlendiriliyorsunuz...');
               // Wait 3 seconds, then navigate to '/'
               setTimeout(() => {
-                this.router.navigate(['/']);
-              }, 3000); // 3000 milliseconds = 3 seconds
+                if (returnUrl) {
+                  // Yeni 04-01-26 / 15:58
+                  // Eğer kullanıcı Guard'dan geldiyse, gitmek istediği yere gönder
+                  this.router.navigateByUrl(returnUrl);
+                } else {
+                  // Yoksa normal akışta Anasayfaya gönder
+                  this.router.navigate(['/']);
+                }
+              }, 3000); // 3 saniye bekleme
             });
             
             console.log('Giriş başarılı!');
