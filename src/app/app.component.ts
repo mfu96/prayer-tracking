@@ -35,7 +35,7 @@ export class AppComponent implements OnInit{
     //{ title: 'Camii', url: '/tabs/mosque', icon: 'assets/icon/mosque.svg', type:'svg' },
        { title: 'Konumum', url: '/tabs/mosque', icon: 'location-sharp' ,type:'ionic || svg'},
 
-    { title: 'Pano', url: '/tabs/daily-board', icon: 'clipboard' },
+    { title: 'Dijital Pano', url: '/tabs/daily-board', icon: 'clipboard' },
     // { title: 'Prayer', url: '/tabs/prayer', icon: 'square' },
     // { title: 'Mosque', url: '/tabs/mosque', icon: 'ellipse' },
     // { title: 'Employee', url: '/tabs/employees', icon: 'ellipse' },
