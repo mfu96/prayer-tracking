@@ -8,7 +8,8 @@ const config: CapacitorConfig = {
 
  plugins: {
     CapacitorUpdater: {
-      autoUpdate: true, 
+         autoUpdate: false, // Yeni 15-01-26 / 19:10 - Bulut kontrolü kapatıldı, manuel yapılacak
+      resetWhenUpdate: false
     }
   },
     android: {

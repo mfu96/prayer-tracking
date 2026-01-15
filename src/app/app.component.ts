@@ -67,35 +67,90 @@ export class AppComponent implements OnInit{
     this.checkLoginStatus();
     this.listenForLoginEvents();
 
-    this.swUpdate.versionUpdates.subscribe(async res => {
-      const toast = await this.toastCtrl.create({
-        message: 'Update available!',
-        position: 'bottom',
-        buttons: [
-          {
-            role: 'cancel',
-            text: 'Reload'
-          }
-        ]
-      });
+    
+    // Yeni 15-01-26 / 19:10 - Updater Hazırlığı ve Kontrolü
+    CapacitorUpdater.notifyAppReady();
+    this.checkForMyUpdate();
 
-      await toast.present();
+    // this.swUpdate.versionUpdates.subscribe(async res => {
+    //   const toast = await this.toastCtrl.create({
+    //     message: 'Update available!',
+    //     position: 'bottom',
+    //     buttons: [
+    //       {
+    //         role: 'cancel',
+    //         text: 'Reload'
+    //       }
+    //     ]
+    //   });
 
-      toast
-        .onDidDismiss()
-        .then(() => this.swUpdate.activateUpdate())
-        .then(() => window.location.reload());
-    });
+    //   await toast.present();
+
+    //   toast
+    //     .onDidDismiss()
+    //     .then(() => this.swUpdate.activateUpdate())
+    //     .then(() => window.location.reload());
+    // });
     
 
-   // --- CAPGO İÇİN EN ÖNEMLİ KISIM ---
-    // Uygulama tamamen yüklendikten (ngOnInit) sonra burası çalışır.
+  //  // --- CAPGO İÇİN EN ÖNEMLİ KISIM ---
+  //   // Uygulama tamamen yüklendikten (ngOnInit) sonra burası çalışır.
+  //   try {
+  //     await CapacitorUpdater.notifyAppReady();
+  //     console.log('Capgo: Uygulama başarıyla başlatıldı ve doğrulandı.');
+  //   } catch (e) {
+  //     // Web'de çalışırken hata vermemesi veya native plugin yüklü değilse
+  //     console.log('Capacitor Updater notify hatası (Web ortamı olabilir):', e);
+  //   }
+  }
+
+
+  // Yeni 15-01-26 / 19:10 - Kendi Sunucumuzdan Güncelleme Kontrolü
+  async checkForMyUpdate() {
     try {
-      await CapacitorUpdater.notifyAppReady();
-      console.log('Capgo: Uygulama başarıyla başlatıldı ve doğrulandı.');
-    } catch (e) {
-      // Web'de çalışırken hata vermemesi veya native plugin yüklü değilse
-      console.log('Capacitor Updater notify hatası (Web ortamı olabilir):', e);
+      // 1. Sunucudaki version.json dosyasını çek
+      // Not: Bu URL'i kendi sunucunda oluşturacağın yere göre düzenle
+      const response = await fetch('https://mobil.mfunet.com.tr/updates/version.json');
+      
+      if (!response.ok) {
+        console.log('Güncelleme sunucusuna ulaşılamadı.');
+        return;
+      }
+
+      const serverData = await response.json();
+      console.log('Sunucu Sürümü:', serverData.version, 'Cihaz Sürümü:', this.appVersion);
+
+      // 2. Sürüm farklıysa güncelleme işlemini başlat
+      if (serverData.version !== this.appVersion) {
+        await this.downloadAndInstallUpdate(serverData.url, serverData.version);
+      }
+
+    } catch (error) {
+      console.error('Güncelleme kontrol hatası:', error);
+    }
+  }
+
+  // Yeni 15-01-26 / 19:10 - İndirme ve Yükleme İşlemi
+  async downloadAndInstallUpdate(zipUrl: string, newVersion: string) {
+    try {
+      console.log('Güncelleme indiriliyor...', zipUrl);
+      
+      const version = await CapacitorUpdater.download({
+        url: zipUrl,
+        version: newVersion
+      });
+
+      console.log('İndirme tamam, güncelleme ayarlanıyor...');
+      await CapacitorUpdater.set(version);
+      
+      // Kullanıcıya haber verip yeniden başlatabiliriz veya sessizce bir sonraki açılışı bekleyebiliriz.
+      // Burada sessizce beklemeyi tercih ediyoruz (ResetWhenUpdate: false yaptık).
+      // Kullanıcı uygulamayı tamamen kapatıp açtığında yeni sürüm gelecek.
+      
+      this.toastService.showToastInfo('Yeni güncelleme indirildi. Uygulama yeniden başlatıldığında aktif olacak.');
+
+    } catch (error) {
+      console.error('Güncelleme yükleme hatası:', error);
     }
   }
 
