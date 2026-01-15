@@ -90,7 +90,7 @@ export class PrayerAddComponent implements OnInit, OnDestroy {
 
   // Namaz vaktini seçme alert'ini açar
   async selectPrayerName() {
-    const prayerNames = ['Giriş','Çıkış', 'Öğle', 'ikindi', 'Akşam', 'Yatsı', 'Diğer']; // Namaz seçenekleri
+    const prayerNames = ['Giriş','Çıkış', 'Öğle', 'İkindi', 'Akşam', 'Yatsı', 'Diğer']; // Namaz seçenekleri
     const alert = document.createElement('ion-alert'); // Yeni bir alert oluşturur
     this.alertInstance = alert; // Alert örneğini kaydeder
     alert.header = 'Lütfen Namaz Vaktini Seçiniz'; // Alert başlığı

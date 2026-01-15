@@ -56,7 +56,7 @@
 
       <ion-item-sliding
         *ngFor="let prayer of group.prayers"
-        [attr.prayer-name]="prayer.prayerName | lowercase"
+        [attr.prayer-name]="prayer.prayerName | trLowerCase"
       >
         <ion-item
           [routerLink]="['/prayer-detail', prayer.prayerId]"

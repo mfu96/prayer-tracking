@@ -102,11 +102,11 @@ getPrayerUserDetail(){
     // Arama metnine göre filtreleme
     const filteredPrayers = this.prayerDetails.filter((prayer) => {
       return (
-        prayer.prayerName.toLowerCase().includes(this.queryText.toLowerCase()) ||
-        prayer.firstName.toLowerCase().includes(this.queryText.toLowerCase()) ||
-        prayer.lastName.toLowerCase().includes(this.queryText.toLowerCase()) ||
-        prayer.mosqueName.toLowerCase().includes(this.queryText.toLowerCase()) ||
-        prayer.companyName.toLowerCase().includes(this.queryText.toLowerCase())
+        prayer.prayerName.toLocaleLowerCase('tr-TR').includes(this.queryText.toLocaleLowerCase('tr-TR')) ||
+        prayer.firstName.toLocaleLowerCase('tr-TR').includes(this.queryText.toLocaleLowerCase('tr-TR')) ||
+        prayer.lastName.toLocaleLowerCase('tr-TR').includes(this.queryText.toLocaleLowerCase('tr-TR')) ||
+        prayer.mosqueName.toLocaleLowerCase('tr-TR').includes(this.queryText.toLocaleLowerCase('tr-TR')) ||
+        prayer.companyName.toLocaleLowerCase('tr-TR').includes(this.queryText.toLocaleLowerCase('tr-TR'))
       );
     });
 

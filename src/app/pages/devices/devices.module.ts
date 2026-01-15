@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { DevicesPageRoutingModule } from './devices-routing.module';
 
 import { DevicesPage } from './devices.page';
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    DevicesPageRoutingModule
+    DevicesPageRoutingModule,
+    PipesModule
   ],
   declarations: [DevicesPage]
 })

@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, Pipe } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
@@ -8,6 +8,7 @@ import { PrayerTimePageRoutingModule } from './prayer-time-routing.module';
 
 import { PrayerTimePage } from './prayer-time.page';
 import { QrComponent } from "../../components/qr/qr.component";
+import { PipesModule } from 'src/app/pipes/pipes.module';
 
 @NgModule({
   imports: [
@@ -15,7 +16,9 @@ import { QrComponent } from "../../components/qr/qr.component";
     FormsModule,
     IonicModule,
     PrayerTimePageRoutingModule,
-    QrComponent
+    QrComponent,
+    PipesModule
+    
 ],
   declarations: [PrayerTimePage]
 })
