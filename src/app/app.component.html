@@ -121,11 +121,14 @@
 
           
       </ion-content>
-
-         <!-- EN ALTTA GÖRÜNECEK VERSİYON -->
+  <!-- Yeni 16-01-26 / 10:05 - En Alta Sabitlenmiş Versiyon Alanı (Tıklanabilir) -->
       <ion-footer class="ion-no-border">
-        <div class="app-version-container">
-          <p>Sürüm: v{{ appVersion }}</p>
+        <div class="app-version-container" (click)="onVersionClick()">
+          <p>
+            Sürüm: v{{ appVersion }} 
+            <!-- Geliştirici modundaysa belli et -->
+            <span *ngIf="currentChannel === 'DEV'" style="color:red; font-weight:bold; margin-left:5px;">(DEV)</span>
+          </p>
         </div>
       </ion-footer>
     </ion-menu>

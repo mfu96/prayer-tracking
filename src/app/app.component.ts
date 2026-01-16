@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
 import { SplashScreen } from '@capacitor/splash-screen';
 import { StatusBar } from '@capacitor/status-bar';
 import { MenuController, Platform, ToastController } from '@ionic/angular';
@@ -12,6 +11,8 @@ import { ToastService } from './services/toast.service';
 // Not: Bu satırın çalışması için tsconfig.json içinde "resolveJsonModule": true olmalıdır.
 import packageInfo from '../../package.json';
 import { CapacitorUpdater } from '@capgo/capacitor-updater';
+// Yeni 16-01-26 / 10:05 - Kanal ayarını saklayacağımız anahtar
+const CHANNEL_KEY = 'update_channel';
 
 
 
@@ -24,6 +25,11 @@ import { CapacitorUpdater } from '@capgo/capacitor-updater';
 export class AppComponent implements OnInit{
 
     public appVersion: string = packageInfo.version; 
+
+    
+  // Yeni 16-01-26 / 10:05 - Kanal Bilgisi (Varsayılan Prod)
+  public currentChannel: string = 'Prod'; 
+  private clickCount = 0; // Gizli tıklama sayacı
 
 
   
@@ -48,7 +54,6 @@ export class AppComponent implements OnInit{
 
   constructor(
     private storage: Storage,
-    private swUpdate: SwUpdate,
     private toastCtrl: ToastController,
     private platform: Platform,
     private userData: UserData,
@@ -65,6 +70,9 @@ export class AppComponent implements OnInit{
   async ngOnInit() {
     await this.storage.create();
 
+  // Yeni 16-01-26 / 10:05 - Kayıtlı kanalı öğren (Dev mi Prod mu?)
+    const channel = await this.storage.get(CHANNEL_KEY);
+    this.currentChannel = channel === 'dev' ? 'DEV' : 'Prod';
      
     // 1. KRİTİK: Uygulama açılır açılmaz "Ben hazırım, sakın eski sürüme dönme" de.
     try {
@@ -78,66 +86,82 @@ export class AppComponent implements OnInit{
     this.checkForMyUpdate();
  
     
-
-    // this.swUpdate.versionUpdates.subscribe(async res => {
-    //   const toast = await this.toastCtrl.create({
-    //     message: 'Update available!',
-    //     position: 'bottom',
-    //     buttons: [
-    //       {
-    //         role: 'cancel',
-    //         text: 'Reload'
-    //       }
-    //     ]
-    //   });
-
-    //   await toast.present();
-
-    //   toast
-    //     .onDidDismiss()
-    //     .then(() => this.swUpdate.activateUpdate())
-    //     .then(() => window.location.reload());
-    // });
-    
-
-  //  // --- CAPGO İÇİN EN ÖNEMLİ KISIM ---
-  //   // Uygulama tamamen yüklendikten (ngOnInit) sonra burası çalışır.
-  //   try {
-  //     await CapacitorUpdater.notifyAppReady();
-  //     console.log('Capgo: Uygulama başarıyla başlatıldı ve doğrulandı.');
-  //   } catch (e) {
-  //     // Web'de çalışırken hata vermemesi veya native plugin yüklü değilse
-  //     console.log('Capacitor Updater notify hatası (Web ortamı olabilir):', e);
-  //   }
   }
 
-
-  async checkForMyUpdate() {
-    try {
-      // Önbelleğe takılmaması için no-store kullanıyoruz
-      const response = await fetch('https://mobil.mfunet.com.tr/updates/version.json', { cache: "no-store" });
-      if (!response.ok) return;
-      
-      const serverData = await response.json();
-      
-      // MEVCUT VERSİYON KONTROLÜ
-      console.log('Sunucu:', serverData.version, 'Cihaz:', this.appVersion);
-  
-      // EĞER VERSİYONLAR AYNIYSA HİÇBİR ŞEY YAPMA (LOOP ENGELİ)
-      if (serverData.version === this.appVersion) {
-          console.log('Zaten güncel sürümdesiniz.');
-          return;
-      }
-  
-      // Farklıysa indir
-      await this.downloadAndInstallUpdate(serverData.url, serverData.version);
-  
-    } catch (error) {
-      console.error('Update hatası:', error);
+// Yeni 16-01-26 / 10:05 - Gizli Kanal Değiştirici (Versiyon yazısına tıklayınca)
+  async onVersionClick() {
+    this.clickCount++;
+    
+    // 5 kere tıklanırsa mod değiştir
+    if (this.clickCount >= 5) {
+      this.clickCount = 0;
+      await this.toggleChannel();
     }
   }
 
-  // Yeni 16-01-26 / 13:00 - Gecikmeli Yükleme Eklendi
+  // Yeni 16-01-26 / 10:15 - Kanal Değiştirme Mantığı
+  async toggleChannel() {
+    const current = await this.storage.get(CHANNEL_KEY);
+    
+    // Eğer şu an 'dev' modundaysak, 5 tıklama ile 'prod'a (Normal) döneriz.
+    if (current === 'dev') {
+      await this.storage.set(CHANNEL_KEY, 'prod');
+      this.currentChannel = 'Prod';
+      this.toastService.showToastSuccess('Normal Kullanıcı moduna geçildi.');
+    } else {
+      // Eğer 'prod' modundaysak, 5 tıklama ile 'dev'e geçeriz.
+      await this.storage.set(CHANNEL_KEY, 'dev');
+      this.currentChannel = 'DEV';
+      this.toastService.showToastSuccess('Geliştirici moduna geçildi! Test sürümleri alınacak.');
+    }
+
+    // Kanal değişince hemen yeni kanalın güncellemesini kontrol et
+    this.checkForMyUpdate();
+  }
+
+  // Yeni 16-01-26 / 10:15 - Sunucudan Kontrol Mantığı (Dinamik URL ve JSON Korumalı)
+  async checkForMyUpdate() {
+    try {
+      // Kanala göre hangi JSON dosyasına bakacağını seç
+      const channel = await this.storage.get(CHANNEL_KEY);
+      const jsonFileName = channel === 'dev' ? 'version-dev.json' : 'version.json';
+      
+      // Kendi sunucuna istek at (No-Store ile önbelleği engelliyoruz)
+      const updateUrl = `https://mobil.mfunet.com.tr/updates/${jsonFileName}`;
+      console.log('Güncelleme kontrol ediliyor:', updateUrl);
+
+      const response = await fetch(updateUrl, { cache: "no-store" });
+      
+      if (!response.ok) {
+        console.log('Sunucuya ulaşılamadı veya dosya yok (404).');
+        return;
+      }
+
+      // JSON parse hatasını önlemek için önce text alıp kontrol ediyoruz
+      const textData = await response.text();
+      let serverData;
+      try {
+        serverData = JSON.parse(textData);
+      } catch (e) {
+        console.error('Sunucudan gelen veri geçerli bir JSON değil:', textData);
+        return;
+      }
+
+      console.log('Kanal:', this.currentChannel, 'Sunucu:', serverData.version, 'Cihaz:', this.appVersion);
+
+      // 2. Sürüm farklıysa güncelleme işlemini başlat
+      if (serverData.version !== this.appVersion) {
+        await this.downloadAndInstallUpdate(serverData.url, serverData.version);
+      } else {
+        console.log('Uygulama güncel.');
+      }
+
+    } catch (error) {
+      console.error('Güncelleme kontrol hatası:', error);
+    }
+  }
+
+  // Yeni 16-01-26 / 10:05 - İndirme ve Yükleme İşlemi
   async downloadAndInstallUpdate(zipUrl: string, newVersion: string) {
     try {
       console.log('Güncelleme indiriliyor...', zipUrl);
@@ -147,24 +171,19 @@ export class AppComponent implements OnInit{
         version: newVersion
       });
 
-      console.log('İndirme tamam.');
-
-      // 1. Kullanıcıya haber ver
-      this.toastService.showToastInfo(`Yeni sürüm (${newVersion}) indirildi. Uygulama güncelleniyor...`);
-
-      // 2. Kullanıcının mesajı okuması için 3 saniye bekle
+      console.log('İndirme tamam, güncelleme ayarlanıyor...');
+      
+      this.toastService.showToastInfo(`Yeni sürüm (${newVersion}) indirildi. Uygulama güncellenecek.`);
       await new Promise(resolve => setTimeout(resolve, 3000));
-
-      // 3. Yüklemeyi ayarla
-      // Not: capacitor.config.ts içinde resetWhenUpdate: false ise yeniden başlamaz,
-      // true ise (varsayılan) yeniden başlar.
+      
       await CapacitorUpdater.set(version);
       
     } catch (error) {
       console.error('Güncelleme yükleme hatası:', error);
-      this.toastService.showToastWarning('Güncelleme sırasında hata oluştu.');
+      this.toastService.showToastInfo('Güncelleme sırasında hata oluştu.');
     }
   }
+  
 
   initializeApp() {
     this.platform.ready().then(() => {
