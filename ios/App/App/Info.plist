@@ -2,10 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSCameraUsageDescription</key>
-	<string>$(PRODUCT_NAME) Kare kod taramak için Kamera izinine ihtiyacımız var.</string>
 	<key>CFBundleDevelopmentRegion</key>
-	<string>tr</string>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>e-Mesai</string>
 	<key>CFBundleExecutable</key>
@@ -26,8 +24,14 @@
 	<string/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) Kare kod taramak için Kamera izinine ihtiyacımız var.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Karekod tarama işlemi sırasında mesai konumunuzun doğruluğunu teyit etmek için konum bilginize ihtiyaç duyulmaktadır.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>$(PRODUCT_NAME) Hareket verisini ekleyebilmek için anlık konum bilginize ihtiyacımız var.</string>
+	<string>Karekod tarama işlemi sırasında mesai konumunuzun doğruluğunu teyit etmek için konum bilginize ihtiyaç duyulmaktadır.</string>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>

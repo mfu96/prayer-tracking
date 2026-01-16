@@ -1,4 +1,6 @@
 PODS:
+  - Alamofire (5.10.2)
+  - BigInt (5.2.0)
   - Capacitor (7.0.1):
     - CapacitorCordova
   - CapacitorApp (7.0.0):
@@ -20,6 +22,12 @@ PODS:
     - Capacitor
   - CapacitorStatusBar (7.0.0):
     - Capacitor
+  - CapgoCapacitorUpdater (7.41.1):
+    - Alamofire (= 5.10.2)
+    - BigInt (= 5.2.0)
+    - Capacitor
+    - Version (= 0.8.0)
+    - ZIPFoundation (~> 0.9)
   - GoogleDataTransport (10.1.0):
     - nanopb (~> 3.30910.0)
     - PromisesObjC (~> 2.4)
@@ -67,6 +75,8 @@ PODS:
   - nanopb/decode (3.30910.0)
   - nanopb/encode (3.30910.0)
   - PromisesObjC (2.4.0)
+  - Version (0.8.0)
+  - ZIPFoundation (0.9.20)
 
 DEPENDENCIES:
   - "Capacitor (from `../../node_modules/@capacitor/ios`)"
@@ -79,9 +89,12 @@ DEPENDENCIES:
   - "CapacitorMlkitBarcodeScanning (from `../../node_modules/@capacitor-mlkit/barcode-scanning`)"
   - "CapacitorSplashScreen (from `../../node_modules/@capacitor/splash-screen`)"
   - "CapacitorStatusBar (from `../../node_modules/@capacitor/status-bar`)"
+  - "CapgoCapacitorUpdater (from `../../node_modules/@capgo/capacitor-updater`)"
 
 SPEC REPOS:
   trunk:
+    - Alamofire
+    - BigInt
     - GoogleDataTransport
     - GoogleMLKit
     - GoogleToolboxForMac
@@ -94,6 +107,8 @@ SPEC REPOS:
     - MLKitVision
     - nanopb
     - PromisesObjC
+    - Version
+    - ZIPFoundation
 
 EXTERNAL SOURCES:
   Capacitor:
@@ -116,8 +131,12 @@ EXTERNAL SOURCES:
     :path: "../../node_modules/@capacitor/splash-screen"
   CapacitorStatusBar:
     :path: "../../node_modules/@capacitor/status-bar"
+  CapgoCapacitorUpdater:
+    :path: "../../node_modules/@capgo/capacitor-updater"
 
 SPEC CHECKSUMS:
+  Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  BigInt: f668a80089607f521586bbe29513d708491ef2f7
   Capacitor: 23fff43571a4d1e3ee7d67b5a3588c6e757c2913
   CapacitorApp: 45cb7cbef4aa380b9236fd6980033eb5cde6fcd2
   CapacitorCordova: 63d476958d5022d76f197031e8b7ea3519988c64
@@ -128,6 +147,7 @@ SPEC CHECKSUMS:
   CapacitorMlkitBarcodeScanning: 11376567a1ee60e04839b3d70548405f4163a6a1
   CapacitorSplashScreen: f4e58cc02aafd91c7cbaf32a3d1b44d02a115125
   CapacitorStatusBar: 438e90beeeefa8276b24e6c5991cb02dd13e51bf
+  CapgoCapacitorUpdater: 4bc3381d413a3e36ecfee9a548b19cc3f4b2a9c8
   GoogleDataTransport: aae35b7ea0c09004c3797d53c8c41f66f219d6a7
   GoogleMLKit: eff9e23ec1d90ea4157a1ee2e32a4f610c5b3318
   GoogleToolboxForMac: d1a2cbf009c453f4d6ded37c105e2f67a32206d8
@@ -140,7 +160,9 @@ SPEC CHECKSUMS:
   MLKitVision: 45e79d68845a2de77e2dd4d7f07947f0ed157b0e
   nanopb: fad817b59e0457d11a5dfbde799381cd727c1275
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
+  Version: de5907f2c5d0f3cf21708db7801d1d5401139486
+  ZIPFoundation: dfd3d681c4053ff7e2f7350bc4e53b5dba3f5351
 
-PODFILE CHECKSUM: 9062f1f693a314e06ecb314b22d9020b36b594af
+PODFILE CHECKSUM: 3e83f8de6285a07175a923bf2ac558aacfbf2e4d
 
 COCOAPODS: 1.16.2
