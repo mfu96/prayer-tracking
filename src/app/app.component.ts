@@ -64,13 +64,20 @@ export class AppComponent implements OnInit{
 
   async ngOnInit() {
     await this.storage.create();
+
+     
+    // 1. KRİTİK: Uygulama açılır açılmaz "Ben hazırım, sakın eski sürüme dönme" de.
+    try {
+       await CapacitorUpdater.notifyAppReady();
+    } catch(e) { console.error(e); }
+  
     this.checkLoginStatus();
     this.listenForLoginEvents();
-
-    
-    // Yeni 15-01-26 / 19:10 - Updater Hazırlığı ve Kontrolü
-    CapacitorUpdater.notifyAppReady();
+  
+    // 2. Güncellemeyi kontrol et
     this.checkForMyUpdate();
+ 
+    
 
     // this.swUpdate.versionUpdates.subscribe(async res => {
     //   const toast = await this.toastCtrl.create({
@@ -105,32 +112,32 @@ export class AppComponent implements OnInit{
   }
 
 
-  // Yeni 15-01-26 / 19:10 - Kendi Sunucumuzdan Güncelleme Kontrolü
   async checkForMyUpdate() {
     try {
-      // 1. Sunucudaki version.json dosyasını çek
-      // Not: Bu URL'i kendi sunucunda oluşturacağın yere göre düzenle
-      const response = await fetch('https://mobil.mfunet.com.tr/updates/version.json');
+      // Önbelleğe takılmaması için no-store kullanıyoruz
+      const response = await fetch('https://mobil.mfunet.com.tr/updates/version.json', { cache: "no-store" });
+      if (!response.ok) return;
       
-      if (!response.ok) {
-        console.log('Güncelleme sunucusuna ulaşılamadı.');
-        return;
-      }
-
       const serverData = await response.json();
-      console.log('Sunucu Sürümü:', serverData.version, 'Cihaz Sürümü:', this.appVersion);
-
-      // 2. Sürüm farklıysa güncelleme işlemini başlat
-      if (serverData.version !== this.appVersion) {
-        await this.downloadAndInstallUpdate(serverData.url, serverData.version);
+      
+      // MEVCUT VERSİYON KONTROLÜ
+      console.log('Sunucu:', serverData.version, 'Cihaz:', this.appVersion);
+  
+      // EĞER VERSİYONLAR AYNIYSA HİÇBİR ŞEY YAPMA (LOOP ENGELİ)
+      if (serverData.version === this.appVersion) {
+          console.log('Zaten güncel sürümdesiniz.');
+          return;
       }
-
+  
+      // Farklıysa indir
+      await this.downloadAndInstallUpdate(serverData.url, serverData.version);
+  
     } catch (error) {
-      console.error('Güncelleme kontrol hatası:', error);
+      console.error('Update hatası:', error);
     }
   }
 
-  // Yeni 15-01-26 / 19:10 - İndirme ve Yükleme İşlemi
+  // Yeni 16-01-26 / 13:00 - Gecikmeli Yükleme Eklendi
   async downloadAndInstallUpdate(zipUrl: string, newVersion: string) {
     try {
       console.log('Güncelleme indiriliyor...', zipUrl);
@@ -140,17 +147,22 @@ export class AppComponent implements OnInit{
         version: newVersion
       });
 
-      console.log('İndirme tamam, güncelleme ayarlanıyor...');
+      console.log('İndirme tamam.');
+
+      // 1. Kullanıcıya haber ver
+      this.toastService.showToastInfo(`Yeni sürüm (${newVersion}) indirildi. Uygulama güncelleniyor...`);
+
+      // 2. Kullanıcının mesajı okuması için 3 saniye bekle
+      await new Promise(resolve => setTimeout(resolve, 3000));
+
+      // 3. Yüklemeyi ayarla
+      // Not: capacitor.config.ts içinde resetWhenUpdate: false ise yeniden başlamaz,
+      // true ise (varsayılan) yeniden başlar.
       await CapacitorUpdater.set(version);
       
-      // Kullanıcıya haber verip yeniden başlatabiliriz veya sessizce bir sonraki açılışı bekleyebiliriz.
-      // Burada sessizce beklemeyi tercih ediyoruz (ResetWhenUpdate: false yaptık).
-      // Kullanıcı uygulamayı tamamen kapatıp açtığında yeni sürüm gelecek.
-      
-      this.toastService.showToastInfo('Yeni güncelleme indirildi. Uygulama yeniden başlatıldığında aktif olacak.');
-
     } catch (error) {
       console.error('Güncelleme yükleme hatası:', error);
+      this.toastService.showToastWarning('Güncelleme sırasında hata oluştu.');
     }
   }
 
